@@ -338,3 +338,12 @@ MonoGame2D/obj/x86/Debug/Riku_fighter.exe
 MonoGame2D/obj/x86/Debug/Riku_fighter.pdb
 MonoGame2D/obj/x86/Debug/XamlSaveStateFile.xml
 MonoGame2D/project.lock.json
+MonoGame2D/bin/WindowsUniversal/x86/Debug/App.xbf
+*.xml
+*.exe
+*.pri
+*.cache
+*.txt
+*.pdb
+*.json
+*.state
