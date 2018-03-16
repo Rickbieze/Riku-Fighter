@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/grass.png</SourceFile>
-  <SourceTime>2015-12-25T16:04:08+01:00</SourceTime>
-  <DestFile>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/bin/WindowsStoreApp/grass.xnb</DestFile>
-  <DestTime>2018-03-16T14:00:09.4859313+01:00</DestTime>
+  <SourceFile>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/player.png</SourceFile>
+  <SourceTime>2016-10-12T09:02:48+02:00</SourceTime>
+  <DestFile>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/bin/WindowsStoreApp/player.xnb</DestFile>
+  <DestTime>2018-03-16T14:09:25.6207094+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2017-03-01T16:05:36+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

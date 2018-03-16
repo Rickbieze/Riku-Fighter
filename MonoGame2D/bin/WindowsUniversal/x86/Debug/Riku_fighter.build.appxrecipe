@@ -10,22 +10,22 @@
     <PackageArchitecture>x86</PackageArchitecture>
     <PackageIdentityName>7e05943d-af2a-4105-8a80-eb18c64e4761</PackageIdentityName>
     <PackageIdentityPublisher>CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US</PackageIdentityPublisher>
-    <IntermediateOutputPath>C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\obj\x86\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\obj\x86\Debug\</IntermediateOutputPath>
     <RemoteDeploymentType></RemoteDeploymentType>
     <PackageRegistrationPath></PackageRegistrationPath>
     <RemoveNonLayoutFiles>true</RemoveNonLayoutFiles>
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
-    <LayoutDir>C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\bin\WindowsUniversal\x86\Debug\AppX</LayoutDir>
+    <LayoutDir>C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\bin\WindowsUniversal\x86\Debug\AppX</LayoutDir>
   </PropertyGroup>
   <ItemGroup>
-    <AppXManifest Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\bin\WindowsUniversal\x86\Debug\Core\AppxManifest.xml">
+    <AppXManifest Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\bin\WindowsUniversal\x86\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\bin\WindowsUniversal\x86\Debug\Riku_fighter.exe">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\bin\WindowsUniversal\x86\Debug\Riku_fighter.exe">
       <PackagePath>entrypoint\Riku_fighter.exe</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Bart\.nuget\packages\microsoft.csharp\4.0.0\lib\netcore50\Microsoft.CSharp.dll">
@@ -358,79 +358,82 @@
     <AppxPackagedFile Include="C:\Program Files %28x86%29\MonoGame\v3.0\Assemblies\WindowsUniversal\SharpDX.Direct2D1.dll">
       <PackagePath>SharpDX.Direct2D1.dll</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\broccoli.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\broccoli.png">
       <PackagePath>Content\broccoli.png</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\game-over.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\game-over.png">
       <PackagePath>Content\game-over.png</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\grass.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\grass.png">
       <PackagePath>Content\grass.png</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\ninja-cat-dino.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\ninja-cat-dino.png">
       <PackagePath>Content\ninja-cat-dino.png</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\start-splash.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\start-splash.png">
       <PackagePath>Content\start-splash.png</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Assets\LockScreenLogo.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Assets\LockScreenLogo.scale-200.png">
       <PackagePath>Assets\LockScreenLogo.scale-200.png</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Assets\SplashScreen.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Assets\SplashScreen.scale-200.png">
       <PackagePath>Assets\SplashScreen.scale-200.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Assets\Square150x150Logo.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Assets\Square150x150Logo.scale-200.png">
       <PackagePath>Assets\Square150x150Logo.scale-200.png</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Assets\Square44x44Logo.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Assets\Square44x44Logo.scale-200.png">
       <PackagePath>Assets\Square44x44Logo.scale-200.png</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
       <PackagePath>Assets\Square44x44Logo.targetsize-24_altform-unplated.png</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Assets\StoreLogo.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Assets\StoreLogo.png">
       <PackagePath>Assets\StoreLogo.png</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Assets\Wide310x150Logo.scale-200.png">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Assets\Wide310x150Logo.scale-200.png">
       <PackagePath>Assets\Wide310x150Logo.scale-200.png</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Properties\Default.rd.xml">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Properties\Default.rd.xml">
       <PackagePath>Properties\Default.rd.xml</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\bin\WindowsStoreApp\broccoli.xnb">
-      <PackagePath>Content\broccoli.xnb</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\bin\WindowsStoreApp\game-over.xnb">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\bin\WindowsStoreApp\game-over.xnb">
       <PackagePath>Content\game-over.xnb</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\bin\WindowsStoreApp\GameState.xnb">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\bin\WindowsStoreApp\GameState.xnb">
       <PackagePath>Content\GameState.xnb</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\bin\WindowsStoreApp\grass.xnb">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\bin\WindowsStoreApp\grass.xnb">
       <PackagePath>Content\grass.xnb</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\bin\WindowsStoreApp\ninja-cat-dino.xnb">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\bin\WindowsStoreApp\ninja-cat-dino.xnb">
       <PackagePath>Content\ninja-cat-dino.xnb</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\bin\WindowsStoreApp\Score.xnb">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\bin\WindowsStoreApp\player.xnb">
+      <PackagePath>Content\player.xnb</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\bin\WindowsStoreApp\Score.xnb">
       <PackagePath>Content\Score.xnb</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\Content\bin\WindowsStoreApp\start-splash.xnb">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\bin\WindowsStoreApp\start-splash.xnb">
       <PackagePath>Content\start-splash.xnb</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\bin\WindowsUniversal\x86\Debug\Riku_fighter.xr.xml">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\Content\bin\WindowsStoreApp\test.xnb">
+      <PackagePath>Content\test.xnb</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\bin\WindowsUniversal\x86\Debug\Riku_fighter.xr.xml">
       <PackagePath>Riku_fighter.xr.xml</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\bin\WindowsUniversal\x86\Debug\resources.pri">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\bin\WindowsUniversal\x86\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Bart\Desktop\Windows-appsample-get-started-mg2d-master\MonoGame2D\bin\WindowsUniversal\x86\Debug\Core\Riku_fighter.exe">
+    <AppxPackagedFile Include="C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\bin\WindowsUniversal\x86\Debug\Core\Riku_fighter.exe">
       <PackagePath>Riku_fighter.exe</PackagePath>
     </AppxPackagedFile>
   </ItemGroup>

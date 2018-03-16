@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Bart/Desktop/Windows-appsample-get-started-mg2d-master/MonoGame2D/Content/broccoli.png</SourceFile>
-  <SourceTime>2017-10-27T01:26:39+02:00</SourceTime>
-  <DestFile>C:/Users/Bart/Desktop/Windows-appsample-get-started-mg2d-master/MonoGame2D/Content/bin/WindowsStoreApp/broccoli.xnb</DestFile>
-  <DestTime>2018-03-14T11:17:11.5237864+01:00</DestTime>
+  <SourceFile>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/test.png</SourceFile>
+  <SourceTime>2017-06-21T11:23:33.5051911+02:00</SourceTime>
+  <DestFile>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/bin/WindowsStoreApp/test.xnb</DestFile>
+  <DestTime>2018-03-16T14:41:08.1516284+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2017-03-01T16:05:36+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

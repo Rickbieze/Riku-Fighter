@@ -4,12 +4,13 @@
   <Platform>WindowsStoreApp</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Bart/Desktop/Windows-appsample-get-started-mg2d-master/MonoGame2D/Content/GameState.spritefont</File>
-    <File>C:/Users/Bart/Desktop/Windows-appsample-get-started-mg2d-master/MonoGame2D/Content/Score.spritefont</File>
-    <File>C:/Users/Bart/Desktop/Windows-appsample-get-started-mg2d-master/MonoGame2D/Content/broccoli.png</File>
-    <File>C:/Users/Bart/Desktop/Windows-appsample-get-started-mg2d-master/MonoGame2D/Content/game-over.png</File>
-    <File>C:/Users/Bart/Desktop/Windows-appsample-get-started-mg2d-master/MonoGame2D/Content/grass.png</File>
-    <File>C:/Users/Bart/Desktop/Windows-appsample-get-started-mg2d-master/MonoGame2D/Content/ninja-cat-dino.png</File>
-    <File>C:/Users/Bart/Desktop/Windows-appsample-get-started-mg2d-master/MonoGame2D/Content/start-splash.png</File>
+    <File>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/GameState.spritefont</File>
+    <File>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/Score.spritefont</File>
+    <File>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/game-over.png</File>
+    <File>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/start-splash.png</File>
+    <File>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/grass.png</File>
+    <File>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/player.png</File>
+    <File>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/ninja-cat-dino.png</File>
+    <File>C:/Users/Bart/Documents/GitHub/Riku-Fighter/MonoGame2D/Content/test.png</File>
   </SourceFiles>
 </SourceFileCollection>

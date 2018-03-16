@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
 
@@ -10,7 +11,7 @@ namespace Riku_fighter
     public class Game1 : Game
     {
         // The ratio of the screen that is sky versus ground
-        const float SKYRATIO = 2f / 3f;
+        const float SKYRATIO = 3f / 3f;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -52,7 +53,7 @@ namespace Riku_fighter
         {
             base.Initialize();
 
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen; // Attempt to launch in fullscreen mode
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize; // Attempt to launch in fullscreen mode
 
             // Get screen height and width, scaling them up if running on a high-DPI monitor.
             screenHeight = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Height);
@@ -86,7 +87,14 @@ namespace Riku_fighter
             gameOverTexture = Content.Load<Texture2D>("game-over");
 
             // Construct SpriteClass objects
-            dino = new SpriteClass(GraphicsDevice, "Content/ninja-cat-dino.png", ScaleToHighDPI(1f));
+            dino = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f));
+            
+            //dino = new SpriteClass(GraphicsDevice, "Content/player.png", ScaleToHighDPI(1f));
+
+            //var spritesheet = Content.Load<Texture2D>("sprites2");
+
+            //dino = new SpriteClass(spritesheet, new Rectangle(0, 96, 32, 48),
+            //new Vector2(100, 100), 4);
 
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
@@ -103,7 +111,7 @@ namespace Riku_fighter
         // Updates the logic of the game state each frame, checking for collision, gathering input, etc.
         protected override void Update(GameTime gameTime)
         {
-            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds; // Get time elapsed since last Update iteration
+            //float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds; // Get time elapsed since last Update iteration
 
             KeyboardHandler(); // Handle keyboard input
 
@@ -115,7 +123,7 @@ namespace Riku_fighter
             }
 
             // Update animated SpriteClass objects based on their current rates of change
-            dino.Update(elapsedTime);
+            dino.Update(gameTime);
 
             // Accelerate the dino downward each frame to simulate gravity.
             dino.dY += gravitySpeed;
@@ -153,7 +161,7 @@ namespace Riku_fighter
             spriteBatch.Begin(); // Begin drawing
 
             // Draw grass
-            spriteBatch.Draw(grass, new Rectangle(0, (int)(screenHeight * SKYRATIO), (int)screenWidth, (int)screenHeight), Color.White);
+            spriteBatch.Draw(grass, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
 
             if (gameOver)
             {
@@ -200,7 +208,6 @@ namespace Riku_fighter
             base.Draw(gameTime);
         }
 
-
         // Scale a number of pixels so that it displays properly on a High-DPI screen, such as a Surface Pro or Studio
         public float ScaleToHighDPI(float f)
         {
@@ -208,10 +215,6 @@ namespace Riku_fighter
             f *= (float)d.RawPixelsPerViewPixel;
             return f;
         }
-
-
-
-
 
         // Start a new game, either when the app starts up or after game over
         public void StartGame()
@@ -256,20 +259,26 @@ namespace Riku_fighter
                 }
             }
 
-            // Jump if Space (or another jump key) is pressed
-            if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.Up))
+            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
             {
-                // Jump if Space is pressed but not held and the dino is on the floor
-                if (!spaceDown && dino.y >= screenHeight * SKYRATIO - 1) dino.dY = dinoJumpY;
-            
-                spaceDown = true;
+                dino.dX = dinoSpeedX * -1;
             }
-            else spaceDown = false;
-
-            // Handle left and right
-            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A)) dino.dX = dinoSpeedX * -1;
-            else if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D)) dino.dX = dinoSpeedX;
-            else dino.dX = 0;
+            else if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
+            {
+                dino.dX = dinoSpeedX;
+            }
+            else if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
+            {
+                if(dino.y >= screenHeight * SKYRATIO - 1)
+                {
+                    dino.dY = dinoJumpY;
+                }
+            }
+            else
+            {
+                dino.dX = 0;
+                //dino.dY = 0;
+            }
         }
     }
 }

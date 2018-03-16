@@ -7,13 +7,14 @@ Assets\Square44x44Logo.targetsize-24_altform-unplated.png
 Assets\StoreLogo.png
 Assets\Wide310x150Logo.scale-200.png
 Riku_fighter.xr.xml
-Content\broccoli.xnb
 Content\game-over.xnb
 Content\GameState.xnb
 Content\grass.xnb
 Content\ninja-cat-dino.xnb
+Content\player.xnb
 Content\Score.xnb
 Content\start-splash.xnb
+Content\test.xnb
 Content\broccoli.png
 Content\game-over.png
 Content\grass.png

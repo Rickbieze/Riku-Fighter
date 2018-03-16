@@ -27,18 +27,6 @@
 /processorParam:TextureFormat=Compressed
 /build:Score.spritefont
 
-#begin broccoli.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:broccoli.png
-
 #begin game-over.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -50,6 +38,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:game-over.png
+
+#begin start-splash.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:start-splash.png
 
 #begin grass.png
 /importer:TextureImporter
@@ -63,6 +63,18 @@
 /processorParam:TextureFormat=Color
 /build:grass.png
 
+#begin player.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:player.png
+
 #begin ninja-cat-dino.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -75,7 +87,7 @@
 /processorParam:TextureFormat=Color
 /build:ninja-cat-dino.png
 
-#begin start-splash.png
+#begin test.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -85,5 +97,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:start-splash.png
+/build:test.png
 
