@@ -29,8 +29,9 @@ namespace Riku_fighter
         Texture2D startGameSplash;
         Texture2D gameOverTexture;
 
-        SpriteClass dino;
-        
+        SpriteClass player1;
+        SpriteClass player2;
+
         Random random;
 
         SpriteFont scoreFont;
@@ -81,7 +82,8 @@ namespace Riku_fighter
             gameOverTexture = Content.Load<Texture2D>("game-over");
 
             // Construct SpriteClass objects
-            dino = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f));
+            player1 = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f), "W", "A", "S", "D");
+            player2 = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f), "Up", "Left", "Down", "Right");
 
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
@@ -103,12 +105,16 @@ namespace Riku_fighter
             // Stop all movement when the game ends
             if (gameOver)
             {
-                dino.dX = 0;
-                dino.dY = 0;
+                player1.dX = 0;
+                player1.dY = 0;
+
+                player2.dX = 0;
+                player2.dY = 0;
             }
 
             // Update animated SpriteClass objects based on their current rates of change
-            dino.Update(gameTime);
+            player1.Update(gameTime);
+            player2.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -144,8 +150,9 @@ namespace Riku_fighter
             // If the game is not over, draw it in black
             else spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth - 100, 50), Color.Black);
 
-            // Draw broccoli and dino with the SpriteClass method
-            dino.Draw(spriteBatch);
+            // Draw the players with the SpriteClass method
+            player1.Draw(spriteBatch);
+            player2.Draw(spriteBatch);
 
             if (!gameStarted)
             {
@@ -181,8 +188,11 @@ namespace Riku_fighter
         public void StartGame()
         {
             // Reset dino position
-            dino.x = screenWidth / 2;
-            dino.y = screenHeight * SKYRATIO;
+            player1.x = 50;
+            player1.y = screenHeight * SKYRATIO;
+
+            player2.x = screenWidth - 50;
+            player2.y = screenHeight * SKYRATIO;
 
             score = 0; // Reset score
         }
@@ -220,7 +230,8 @@ namespace Riku_fighter
                 }
             }
 
-            dino.keyHandler(state, SKYRATIO, screenHeight, screenWidth);
+            player1.keyHandler(state, SKYRATIO, screenHeight, screenWidth);
+            player2.keyHandler(state, SKYRATIO, screenHeight, screenWidth);
         }
     }
 }

@@ -25,6 +25,11 @@ namespace Riku_fighter
         float dinoJumpY;
         float gravitySpeed;
 
+        Enum Up;
+        Enum Right;
+        Enum Left;
+        Enum Down;
+
         // sprite texture
         public Texture2D texture
         {
@@ -81,7 +86,7 @@ namespace Riku_fighter
         }
 
         // Constructor
-        public SpriteClass(Texture2D texture, Vector2 position, int size, int rows, int columns, float scale)
+        public SpriteClass(Texture2D texture, Vector2 position, int size, int rows, int columns, float scale, string up, string left, string down, string right)
         {
             this.size = size;
             this.texture = texture;
@@ -97,7 +102,12 @@ namespace Riku_fighter
 
             dinoSpeedX = ScaleToHighDPI(1000f);
             dinoJumpY = ScaleToHighDPI(-1200f);
-            gravitySpeed = ScaleToHighDPI(30f);
+            gravitySpeed = ScaleToHighDPI(50f);
+
+            Up = (Keys)Enum.Parse(typeof(Keys), up);
+            Down = (Keys)Enum.Parse(typeof(Keys), down);
+            Right = (Keys)Enum.Parse(typeof(Keys), right);
+            Left = (Keys)Enum.Parse(typeof(Keys), left);
 
             // Load the specified texture
             //var stream = TitleContainer.OpenStream(textureName);
@@ -186,25 +196,25 @@ namespace Riku_fighter
             dY += gravitySpeed;
 
 
-            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
+            if (state.Equals(new KeyboardState()))
+            {
+                dX = 0;
+            }
+
+            if (state.IsKeyDown((Keys)Left))
             {
                 dX = dinoSpeedX * -1;
             }
-            else if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
+            if (state.IsKeyDown((Keys)Right))
             {
                 dX = dinoSpeedX;
             }
-            else if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
+            if (state.IsKeyDown((Keys)Up))
             {
                 if (y >= screenHeight * SKYRATIO - 1)
                 {
                     dY = dinoJumpY;
                 }
-            }
-            else
-            {
-                dX = 0;
-                //dino.dY = 0;
             }
         }
     }
