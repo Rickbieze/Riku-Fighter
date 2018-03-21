@@ -20,9 +20,6 @@ namespace Riku_fighter
 
         float screenWidth;
         float screenHeight;
-        float dinoSpeedX;
-        float dinoJumpY;
-        float gravitySpeed;
 
         bool spaceDown;
         bool gameStarted;
@@ -32,8 +29,9 @@ namespace Riku_fighter
         Texture2D startGameSplash;
         Texture2D gameOverTexture;
 
-        SpriteClass dino;
-        
+        SpriteClass player1;
+        SpriteClass player2;
+
         Random random;
 
         SpriteFont scoreFont;
@@ -65,9 +63,6 @@ namespace Riku_fighter
 
             random = new Random();
 
-            dinoSpeedX = ScaleToHighDPI(1000f);
-            dinoJumpY = ScaleToHighDPI(-1200f);
-            gravitySpeed = ScaleToHighDPI(30f);
             score = 0;
 
             this.IsMouseVisible = false; // Hide the mouse within the app window
@@ -87,14 +82,8 @@ namespace Riku_fighter
             gameOverTexture = Content.Load<Texture2D>("game-over");
 
             // Construct SpriteClass objects
-            dino = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f));
-            
-            //dino = new SpriteClass(GraphicsDevice, "Content/player.png", ScaleToHighDPI(1f));
-
-            //var spritesheet = Content.Load<Texture2D>("sprites2");
-
-            //dino = new SpriteClass(spritesheet, new Rectangle(0, 96, 32, 48),
-            //new Vector2(100, 100), 4);
+            player1 = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f), "W", "A", "S", "D");
+            player2 = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f), "Up", "Left", "Down", "Right");
 
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
@@ -111,43 +100,21 @@ namespace Riku_fighter
         // Updates the logic of the game state each frame, checking for collision, gathering input, etc.
         protected override void Update(GameTime gameTime)
         {
-            //float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds; // Get time elapsed since last Update iteration
-
             KeyboardHandler(); // Handle keyboard input
 
             // Stop all movement when the game ends
             if (gameOver)
             {
-                dino.dX = 0;
-                dino.dY = 0;
+                player1.dX = 0;
+                player1.dY = 0;
+
+                player2.dX = 0;
+                player2.dY = 0;
             }
 
             // Update animated SpriteClass objects based on their current rates of change
-            dino.Update(gameTime);
-
-            // Accelerate the dino downward each frame to simulate gravity.
-            dino.dY += gravitySpeed;
-
-            // Set game floor
-            if (dino.y > screenHeight * SKYRATIO)
-            {
-                dino.dY = 0;
-                dino.y = screenHeight * SKYRATIO;
-            }
-
-            // Set right edge
-            if (dino.x > screenWidth - dino.texture.Width / 2)
-            {
-                dino.x = screenWidth - dino.texture.Width / 2;
-                dino.dX = 0;
-            }
-
-            // Set left edge
-            if (dino.x < 0 + dino.texture.Width / 2)
-            {
-                dino.x = 0 + dino.texture.Width / 2;
-                dino.dX = 0;
-            }
+            player1.Update(gameTime);
+            player2.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -183,8 +150,9 @@ namespace Riku_fighter
             // If the game is not over, draw it in black
             else spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth - 100, 50), Color.Black);
 
-            // Draw broccoli and dino with the SpriteClass method
-            dino.Draw(spriteBatch);
+            // Draw the players with the SpriteClass method
+            player1.Draw(spriteBatch);
+            player2.Draw(spriteBatch);
 
             if (!gameStarted)
             {
@@ -220,8 +188,11 @@ namespace Riku_fighter
         public void StartGame()
         {
             // Reset dino position
-            dino.x = screenWidth / 2;
-            dino.y = screenHeight * SKYRATIO;
+            player1.x = 50;
+            player1.y = screenHeight * SKYRATIO;
+
+            player2.x = screenWidth - 50;
+            player2.y = screenHeight * SKYRATIO;
 
             score = 0; // Reset score
         }
@@ -231,7 +202,7 @@ namespace Riku_fighter
         void KeyboardHandler()
         {
             KeyboardState state = Keyboard.GetState();
-            
+
             // Quit the game if Escape is pressed.
             if (state.IsKeyDown(Keys.Escape)) Exit();
 
@@ -259,26 +230,8 @@ namespace Riku_fighter
                 }
             }
 
-            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
-            {
-                dino.dX = dinoSpeedX * -1;
-            }
-            else if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
-            {
-                dino.dX = dinoSpeedX;
-            }
-            else if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
-            {
-                if(dino.y >= screenHeight * SKYRATIO - 1)
-                {
-                    dino.dY = dinoJumpY;
-                }
-            }
-            else
-            {
-                dino.dX = 0;
-                //dino.dY = 0;
-            }
+            player1.keyHandler(state, SKYRATIO, screenHeight, screenWidth);
+            player2.keyHandler(state, SKYRATIO, screenHeight, screenWidth);
         }
     }
 }
