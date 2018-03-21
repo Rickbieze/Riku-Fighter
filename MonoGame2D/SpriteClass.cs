@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
+using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using Windows.Graphics.Display;
+using Windows.UI.ViewManagement;
 
 namespace Riku_fighter
 {
@@ -21,6 +20,10 @@ namespace Riku_fighter
         private int totalFrames;
         private int timeSinceLastFrame = 0;
         private int millisecondsPerFrame = 180;
+
+        float dinoSpeedX;
+        float dinoJumpY;
+        float gravitySpeed;
 
         // sprite texture
         public Texture2D texture
@@ -92,9 +95,20 @@ namespace Riku_fighter
 
             totalFrames = rows * columns;
 
+            dinoSpeedX = ScaleToHighDPI(1000f);
+            dinoJumpY = ScaleToHighDPI(-1200f);
+            gravitySpeed = ScaleToHighDPI(30f);
+
             // Load the specified texture
             //var stream = TitleContainer.OpenStream(textureName);
             //texture = Texture2D.FromStream(graphicsDevice, stream);
+        }
+
+        public float ScaleToHighDPI(float f)
+        {
+            DisplayInformation d = DisplayInformation.GetForCurrentView();
+            f *= (float)d.RawPixelsPerViewPixel;
+            return f;
         }
 
         // Update the position and angle of the sprite based on each rate of change and the time elapsed
@@ -133,16 +147,7 @@ namespace Riku_fighter
             Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, width * (int)size, height * (int)size);
             Vector2 spritePosition = new Vector2(this.x, this.y);
             spriteBatch.Draw(texture, spritePosition, sourceRectangle, Color.White, this.angle, new Vector2(texture.Width / 2, texture.Height / 2), new Vector2(scale, scale), SpriteEffects.None, 0f);
-            //Debug.WriteLine(row + " :: " + column);
-
-
-            //Debug.WriteLine((this.x).ToString() + " x::y " + (this.y).ToString());
-            // Determine the position vector of the sprite
-
-
-            // Draw the sprite
-            //spriteBatch.Draw(texture, spritePosition, null, Color.White, this.angle, new Vector2(texture.Width / 2, texture.Height / 2), new Vector2(scale, scale), SpriteEffects.None, 0f);
-        }
+         }
 
         // Detect collision between two rectangular sprites
         public bool RectangleCollision(SpriteClass otherSprite)
@@ -154,5 +159,53 @@ namespace Riku_fighter
             return true;
         }
 
+        public void keyHandler(KeyboardState state, float SKYRATIO, float screenHeight, float screenWidth)
+        {
+            // Set game floor
+            if (y > screenHeight * SKYRATIO)
+            {
+                dY = 0;
+                y = screenHeight * SKYRATIO;
+            }
+
+            // Set right edge
+            if (x > screenWidth - texture.Width / 2)
+            {
+                x = screenWidth - texture.Width / 2;
+                dX = 0;
+            }
+
+            // Set left edge
+            if (x < 0 + texture.Width / 2)
+            {
+                x = 0 + texture.Width / 2;
+                dX = 0;
+            }
+
+            // Accelerate the dino downward each frame to simulate gravity.
+            dY += gravitySpeed;
+
+
+            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A))
+            {
+                dX = dinoSpeedX * -1;
+            }
+            else if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D))
+            {
+                dX = dinoSpeedX;
+            }
+            else if (state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W))
+            {
+                if (y >= screenHeight * SKYRATIO - 1)
+                {
+                    dY = dinoJumpY;
+                }
+            }
+            else
+            {
+                dX = 0;
+                //dino.dY = 0;
+            }
+        }
     }
 }
