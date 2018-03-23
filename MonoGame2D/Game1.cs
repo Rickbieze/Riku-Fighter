@@ -21,7 +21,6 @@ namespace Riku_fighter
         float screenWidth;
         float screenHeight;
 
-        bool spaceDown;
         bool gameStarted;
         bool gameOver;
 
@@ -31,6 +30,7 @@ namespace Riku_fighter
 
         SpriteClass player1;
         SpriteClass player2;
+        Menu menu;
 
         Random random;
 
@@ -57,7 +57,6 @@ namespace Riku_fighter
             screenHeight = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Height);
             screenWidth = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Width);
 
-            spaceDown = false;
             gameStarted = false;
             gameOver = false;
 
@@ -75,16 +74,16 @@ namespace Riku_fighter
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+    
             // Load textures
             grass = Content.Load<Texture2D>("grass");
-            startGameSplash = Content.Load<Texture2D>("start-splash");
+            // startGameSplash = Content.Load<Texture2D>("menu");
             gameOverTexture = Content.Load<Texture2D>("game-over");
 
             // Construct SpriteClass objects
             player1 = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f), "W", "A", "S", "D");
             player2 = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f), "Up", "Left", "Down", "Right");
-
+            menu = new Menu(this.Content, this.GraphicsDevice);
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
             stateFont = Content.Load<SpriteFont>("GameState");
@@ -101,7 +100,7 @@ namespace Riku_fighter
         protected override void Update(GameTime gameTime)
         {
             KeyboardHandler(); // Handle keyboard input
-
+            menu.keyHandler(Keyboard.GetState());
             // Stop all movement when the game ends
             if (gameOver)
             {
@@ -130,6 +129,7 @@ namespace Riku_fighter
             // Draw grass
             spriteBatch.Draw(grass, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
 
+
             if (gameOver)
             {
                 // Draw game over texture
@@ -157,18 +157,19 @@ namespace Riku_fighter
             if (!gameStarted)
             {
                 // Fill the screen with black before the game starts
-                spriteBatch.Draw(startGameSplash, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
+                //spriteBatch.Draw(startGameSplash, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
 
-                String title = "Riku Fighter";
-                String pressSpace = "Press Space to start";
+                //String title = "Riku Fighter";
+                //String pressSpace = "Press Space to start";
 
-                // Measure the size of text in the given font
-                Vector2 titleSize = stateFont.MeasureString(title);
-                Vector2 pressSpaceSize = stateFont.MeasureString(pressSpace);
+                //// Measure the size of text in the given font
+                //Vector2 titleSize = stateFont.MeasureString(title);
+                //Vector2 pressSpaceSize = stateFont.MeasureString(pressSpace);
 
-                // Draw the text horizontally centered
-                spriteBatch.DrawString(stateFont, title, new Vector2(screenWidth / 2 - titleSize.X / 2, screenHeight / 3), Color.ForestGreen);
-                spriteBatch.DrawString(stateFont, pressSpace, new Vector2(screenWidth / 2 - pressSpaceSize.X / 2, screenHeight / 2), Color.White);
+                //// Draw the text horizontally centered
+                //spriteBatch.DrawString(stateFont, title, new Vector2(screenWidth / 2 - titleSize.X / 2, screenHeight / 3), Color.ForestGreen);
+                //spriteBatch.DrawString(stateFont, pressSpace, new Vector2(screenWidth / 2 - pressSpaceSize.X / 2, screenHeight / 2), Color.White);
+                menu.Draw(spriteBatch, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
             }
 
             spriteBatch.End(); // Stop drawing
@@ -214,7 +215,6 @@ namespace Riku_fighter
                 {
                     StartGame();
                     gameStarted = true;
-                    spaceDown = true;
                     gameOver = false;
                 }
                 return;
