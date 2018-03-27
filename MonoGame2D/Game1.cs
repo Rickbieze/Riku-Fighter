@@ -57,7 +57,7 @@ namespace Riku_fighter
             screenHeight = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Height);
             screenWidth = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Width);
 
-            gameStarted = false;
+ 
             gameOver = false;
 
             random = new Random();
@@ -99,6 +99,7 @@ namespace Riku_fighter
         // Updates the logic of the game state each frame, checking for collision, gathering input, etc.
         protected override void Update(GameTime gameTime)
         {
+            gameStarted = menu.shouldStartGame;
             KeyboardHandler(); // Handle keyboard input
             menu.keyHandler(Keyboard.GetState());
             // Stop all movement when the game ends

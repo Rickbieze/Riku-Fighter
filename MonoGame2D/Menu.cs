@@ -15,37 +15,43 @@ namespace Riku_fighter
         List<Button> buttons = new List<Button>();
         ContentManager content;
         GraphicsDevice graphics;
+        public Boolean shouldStartGame { get; set; }
 
         Button CurrentButton;
         int index = 0;
 
         // sprite texture
-        public Texture2D texture
-        {
-            get;
-        }
+        private Texture2D background;
+        private Texture2D logo;
 
         // Constructor
         public Menu(ContentManager content, GraphicsDevice graphics)
         {
             this.content = content;
             this.graphics = graphics;
+            this.shouldStartGame = false;
 
-            this.texture = content.Load<Texture2D>("menu");
+            this.background = content.Load<Texture2D>("menubackground");
+            this.logo = content.Load<Texture2D>("rikku_fighter_logo");
             addMenuButtons();
             CurrentButton = buttons[0];
         }
 
-        // Update the position and angle of the sprite based on each rate of change and the time elapsed
+
         public void Update(GameTime gameTime)
         {
  
         }
 
-        // Draw the sprite with the given SpriteBatch
+        // Draw the items with the given SpriteBatch
         public void Draw(SpriteBatch spriteBatch, Rectangle rect, Color color)
         {
-            spriteBatch.Draw(texture, rect, color);
+            Viewport viewport = graphics.Viewport;
+            Rectangle logoRect = new Rectangle((viewport.Width / 2) - (600 / 2), 150, 600, 200);
+
+            
+            spriteBatch.Draw(background, rect, color);
+            spriteBatch.Draw(logo, logoRect, color);
             foreach (var button in buttons)
             {
                 button.Update();
@@ -56,25 +62,23 @@ namespace Riku_fighter
         private void addMenuButtons()
         {
             Viewport viewport = graphics.Viewport;
-            Texture2D defaultButton = content.Load<Texture2D>("newgame_default");
-            Texture2D selectedButton = content.Load<Texture2D>("newgame_selected");
+            Texture2D defaultButton = content.Load<Texture2D>("button_play_default");
+            Texture2D selectedButton = content.Load<Texture2D>("button_play_selected");
 
-            Texture2D quitDefault = content.Load<Texture2D>("quit_default");
-            Texture2D quitSelected = content.Load<Texture2D>("quit_selected");
+            Texture2D quitDefault = content.Load<Texture2D>("button_quit_default");
+            Texture2D quitSelected = content.Load<Texture2D>("button_quit_selected");
+            
 
-            Rectangle button = new Rectangle((viewport.Width / 2) - (306 / 2), 150, 306, 64);
+            Rectangle button = new Rectangle((viewport.Width / 2) - (306 / 2), 350, 306, 64);
 
             buttons.Add(new Button(button, defaultButton, selectedButton, defaultButton, true));
 
-            buttons.Add(new Button(new Rectangle((viewport.Width / 2) - (306 / 2), 250, 306, 64), quitDefault, quitSelected, quitDefault, false));
+            buttons.Add(new Button(new Rectangle((viewport.Width / 2) - (306 / 2), 450, 306, 64), quitDefault, quitSelected, quitDefault, false));
         }
-
-        // Detect collision between two rectangular sprites
 
         KeyboardState oldState;
         public void keyHandler(KeyboardState state)
         {
-            Debug.WriteLine(index);
             bool keylock = false;
 
             if (!keylock)
@@ -103,6 +107,21 @@ namespace Riku_fighter
                         CurrentButton.setSelected(false);
                         CurrentButton = buttons[index];
                         CurrentButton.setSelected(true);
+                    }
+
+                }
+                if (state.IsKeyDown(Keys.Enter) && !oldState.IsKeyDown(Keys.Enter))
+                {
+                    Debug.WriteLine(CurrentButton);
+                    Debug.WriteLine(buttons[1]);
+                    if (CurrentButton == buttons[0])
+                    {
+                        shouldStartGame = true;
+                        //gameStateManager.Change("worldmap", new Player());
+                    }
+                    else if (CurrentButton == buttons[1])
+                    {
+                        App.Current.Exit();
                     }
 
                 }

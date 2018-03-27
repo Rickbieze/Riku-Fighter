@@ -34,7 +34,7 @@ namespace Riku_fighter
 
         private Dictionary<State, Texture2D> _textures;
 
-        public Button(Rectangle rectangle, Texture2D noneTexture, Texture2D hoverTexture, Texture2D pressedTexture, bool selected)
+        public Button(Rectangle rectangle, Texture2D noneTexture, Texture2D hoverTexture, Texture2D pressedTexture, bool isSelected)
         {
             // buttonSound = content.Load<Song>("audio/2nd_click_rear");
             _rectangle = rectangle;
@@ -45,7 +45,7 @@ namespace Riku_fighter
             { State.Hover, hoverTexture },
             { State.Pressed, pressedTexture }
         };
-            this.selected = selected;
+            this.selected = isSelected;
             _state = State.Hover;
         }
 
