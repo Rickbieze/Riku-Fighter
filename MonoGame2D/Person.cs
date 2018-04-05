@@ -1,6 +1,7 @@
 ﻿using Riku_fighter.Race;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Riku_fighter
@@ -83,13 +84,14 @@ namespace Riku_fighter
             //string maleNames = System.IO.File.ReadAllText(@"C:\Users\" + Environment.UserName + @"\Source\Repos\LifeSimulator\LifeSimulator\LifeSimulator\MaleNames.txt");
             Task<String> femaleTask = new Task<String>(() =>
             {
-                string femaleName = System.IO.File.ReadAllText(@"C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\FemaleNames.txt");
+                //string femaleName = System.IO.File.ReadAllText(@"C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\FemaleNames.txt");
+                var femaleName = Path.Combine(Directory.GetCurrentDirectory(), "\\FemaleNames.txt");
                 return femaleName;
             });
 
             Task<String> maleTask = new Task<String>(() =>
             {
-                string maleName = System.IO.File.ReadAllText(@"C:\Users\Bart\Documents\GitHub\Riku-Fighter\MonoGame2D\MaleNames.txt");
+                string maleName = Path.Combine(Directory.GetCurrentDirectory(), "\\MaleNames.txt");
                 return maleName;
             });
 
