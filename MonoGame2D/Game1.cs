@@ -90,7 +90,7 @@ namespace Riku_fighter
 
             // Construct SpriteClass objects
             player1 = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), "W", "A", "S", "D");
-            player2 = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), "Up", "Left", "Down", "Right");
+            player2 = new SpriteClass(Content.Load<Texture2D>("playerLeft"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), "Up", "Left", "Down", "Right");
 
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
@@ -212,10 +212,10 @@ namespace Riku_fighter
         public void StartGame()
         {
             // Reset player position
-            player1.x = 50;
+            player1.x = 0;
             player1.y = screenHeight * SKYRATIO;
 
-            player2.x = screenWidth - 50;
+            player2.x = screenWidth;
             player2.y = screenHeight * SKYRATIO;
 
             score = 0; // Reset score
@@ -223,7 +223,7 @@ namespace Riku_fighter
 
 
         // Handle user input from the keyboard
-        void KeyboardHandler()
+        public void KeyboardHandler()
         {
             KeyboardState state = Keyboard.GetState();
             
@@ -254,8 +254,8 @@ namespace Riku_fighter
                 }
             }
 
-            player1.keyHandler(state, SKYRATIO, screenHeight, screenWidth);
-            player2.keyHandler(state, SKYRATIO, screenHeight, screenWidth);
+            player1.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
+            player2.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
         }
     }
 }

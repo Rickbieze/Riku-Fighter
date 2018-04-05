@@ -34,6 +34,7 @@ namespace Riku_fighter
         public Texture2D texture
         {
             get;
+            set;
         }
 
         // x coordinate of the center of the sprite
@@ -100,7 +101,7 @@ namespace Riku_fighter
 
             totalFrames = rows * columns;
 
-            xSpeed = ScaleToHighDPI(1000f);
+            xSpeed = ScaleToHighDPI(200f);
             yJump = ScaleToHighDPI(-1200f);
             gravitySpeed = ScaleToHighDPI(50f);
 
@@ -156,7 +157,7 @@ namespace Riku_fighter
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
             Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, width * (int)size, height * (int)size);
             Vector2 spritePosition = new Vector2(this.x, this.y);
-            spriteBatch.Draw(texture, spritePosition, sourceRectangle, Color.White, this.angle, new Vector2(texture.Width / 2, texture.Height / 2), new Vector2(scale, scale), SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, spritePosition, sourceRectangle, Color.White, this.angle, new Vector2(54, texture.Height / 2), new Vector2(scale, scale), SpriteEffects.None, 0f);
          }
 
         // Detect collision between two rectangular sprites
@@ -169,7 +170,7 @@ namespace Riku_fighter
             return true;
         }
 
-        public void keyHandler(KeyboardState state, float SKYRATIO, float screenHeight, float screenWidth)
+        public void keyHandler(KeyboardState state, float SKYRATIO, float screenHeight, float screenWidth, Texture2D right, Texture2D left)
         {
             // Set game floor
             if (y > screenHeight * SKYRATIO)
@@ -179,17 +180,19 @@ namespace Riku_fighter
             }
 
             // Set right edge
-            if (x > screenWidth - texture.Width / 2)
+            if (x >= screenWidth)
             {
-                x = screenWidth - texture.Width / 4;
-                dX = 0;
+                x = screenWidth;
+                dX = xSpeed * -1;
+                texture = left;
             }
 
             // Set left edge
-            if (x < 0 + texture.Width / 2)
+            if (x <= 80)
             {
-                x = 0 + texture.Width / 2;
-                dX = 0;
+                x = 80;
+                dX = xSpeed;
+                texture = right;
             }
 
             // Accelerate the player downward each frame to simulate gravity.
@@ -198,7 +201,7 @@ namespace Riku_fighter
 
             if (state.Equals(new KeyboardState()))
             {
-                dX = 0;
+                //dX = 0;
             }
 
             if (state.IsKeyDown((Keys)Left))
