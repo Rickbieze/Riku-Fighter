@@ -8,8 +8,12 @@ using Windows.UI.ViewManagement;
 
 namespace Riku_fighter
 {
-    class SpriteClass
+    public class SpriteClass
     {
+        public SpriteClass(Person person)
+        {
+            this.person = person;
+        }
         const float HITBOXSCALE = .5f; // experiment with this value to make the collision detection more or less forgiving
 
         private int rows;
@@ -20,7 +24,7 @@ namespace Riku_fighter
         private int totalFrames;
         private int timeSinceLastFrame = 0;
         private int millisecondsPerFrame = 180;
-
+        public Person person;
         float xSpeed;
         float yJump;
         float gravitySpeed;
@@ -87,7 +91,7 @@ namespace Riku_fighter
         }
 
         // Constructor
-        public SpriteClass(Texture2D texture, Vector2 position, int size, int rows, int columns, float scale, string up, string left, string down, string right)
+        public SpriteClass(Texture2D texture, Vector2 position, int size, int rows, int columns, float scale)
         {
             this.size = size;
             this.texture = texture;
@@ -105,14 +109,28 @@ namespace Riku_fighter
             yJump = ScaleToHighDPI(-1200f);
             gravitySpeed = ScaleToHighDPI(50f);
 
-            Up = (Keys)Enum.Parse(typeof(Keys), up);
-            Down = (Keys)Enum.Parse(typeof(Keys), down);
-            Right = (Keys)Enum.Parse(typeof(Keys), right);
-            Left = (Keys)Enum.Parse(typeof(Keys), left);
-
             // Load the specified texture
             //var stream = TitleContainer.OpenStream(textureName);
             //texture = Texture2D.FromStream(graphicsDevice, stream);
+        }
+
+        public void SetSpriteData(Texture2D texture, Vector2 position, int size, int rows, int columns, float scale)
+        {
+            this.size = size;
+            this.texture = texture;
+            this.rows = rows;
+            this.columns = columns;
+            this.position = position;
+
+            currentFrame = 0;
+
+            this.scale = scale;
+
+            totalFrames = rows * columns;
+
+            xSpeed = ScaleToHighDPI(200f);
+            yJump = ScaleToHighDPI(-1200f);
+            gravitySpeed = ScaleToHighDPI(50f);
         }
 
         public float ScaleToHighDPI(float f)

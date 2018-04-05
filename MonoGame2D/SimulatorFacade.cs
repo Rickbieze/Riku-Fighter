@@ -24,11 +24,15 @@ namespace Riku_fighter
         public List<Person> TempDeadPeople = new List<Person>();
         public List<Person> AliveHumans = new List<Person>();
         public List<Person> DeadHumans = new List<Person>();
+        public List<SpriteClass> HumanitySprites = new List<SpriteClass>(); 
+        public List<SpriteClass> TempBabySprites = new List<SpriteClass>();
+        public List<SpriteClass> TempDeadSprites = new List<SpriteClass>();
+        public List<SpriteClass> AliveSprites = new List<SpriteClass>();
+        public List<SpriteClass> DeadSprites = new List<SpriteClass>();
 
         public SimulatorFacade()
         {
             CreateHumanity();
-
         }
 
         public void CreateHumanity()
@@ -149,6 +153,15 @@ namespace Riku_fighter
             Negroid Gottard = new Negroid("Gottard", John, Mable, Gender.Genders.male, DateTime.Now);
             Caucasoid Gwynevere = new Caucasoid("Gwynevere", Gwyn, Priscilla, Gender.Genders.female, DateTime.Now);
 
+            SpriteClass SpriteAdam = new SpriteClass(Adam);
+            SpriteClass SpriteMadison = new SpriteClass(Madison);
+            SpriteClass SpriteJacob = new SpriteClass(Jacob);
+            SpriteClass SpriteEve = new SpriteClass(Eve);
+            SpriteClass SpriteJames = new SpriteClass(James);
+            SpriteClass SpriteLaura = new SpriteClass(Laura);
+            SpriteClass SpriteGottard = new SpriteClass(Gottard);
+            SpriteClass SpriteGwynevere = new SpriteClass(Gwynevere);
+
             Adam.State = new Healthy();
             Madison.State = new Healthy();
             Jacob.State = new Healthy();
@@ -191,38 +204,62 @@ namespace Riku_fighter
             AliveHumans.Add(Priscilla);
             AliveHumans.Add(Mable);
             AliveHumans.Add(John);
+
+            AliveSprites.Add(SpriteAdam);
+            AliveSprites.Add(SpriteMadison);
+            AliveSprites.Add(SpriteJacob);
+            AliveSprites.Add(SpriteEve);
+            AliveSprites.Add(SpriteJames);
+            AliveSprites.Add(SpriteLaura);
+            AliveSprites.Add(SpriteGottard);
+            AliveSprites.Add(SpriteGwynevere);
+
         }
-                
+             
+        public List<SpriteClass> GetBabiesThisRound()
+        {
+            List<SpriteClass> babies = TempBabySprites;
+            TempBabySprites.Clear();
+            return babies;
+        }
+
+        public List<SpriteClass> GetDeadThisRound()
+        {
+            List<SpriteClass> dead = TempDeadSprites;
+            TempDeadSprites.Clear();
+            return dead;
+        }
+
         public void RunSimulator()
         {
             testSim();
             CurrentDate = CurrentDate.AddYears(1);
             List<Person> population = new List<Person>();
 
-            foreach (var human in AliveHumans)
+            foreach (var sprite in AliveSprites)
             {
-                int age = human.GetAge(CurrentDate);
+                int age = sprite.person.GetAge(CurrentDate);
                 var dieProb = new Probability().GetRandomDouble();
                 var accProb = new Probability().GetRandomDouble();
                 //Console.WriteLine("Die Probability: " + dieProb + "-- Accident Probability: " + accProb);
-                if (dieProb > human.GetDieProb() && human.Mother != null && human.Father != null || accProb > ACCIDENT_PROB && human.Mother != null && human.Father != null)
+                if (dieProb > sprite.person.GetDieProb() && sprite.person.Mother != null && sprite.person.Father != null || accProb > ACCIDENT_PROB && sprite.person.Mother != null && sprite.person.Father != null)
                 {
-                    human.State = new Deceased(CurrentDate);
+                    sprite.person.State = new Deceased(CurrentDate);
                 }
 
-                if (human.State.GetType() == typeof(Healthy))
+                if (sprite.person.State.GetType() == typeof(Healthy))
                 {
-                    human.State.GetAliveState();
-                    if (new Probability().GetRandomDouble() > human.State.CurrStatus.DISEASE_PROB)
+                    sprite.person.State.GetAliveState();
+                    if (new Probability().GetRandomDouble() > sprite.person.State.CurrStatus.DISEASE_PROB)
                     {
-                        human.State = new Sick();
+                        sprite.person.State = new Sick();
                     }
                 }
-                else if(human.State.GetType() == typeof(Sick))
+                else if(sprite.person.State.GetType() == typeof(Sick))
                 {
-                    if (new Probability().GetRandomDouble() > human.State.CurrStatus.CURE_PROB)
+                    if (new Probability().GetRandomDouble() > sprite.person.State.CurrStatus.CURE_PROB)
                     {
-                        human.State = new Healthy();
+                        sprite.person.State = new Healthy();
                     }
                 }              
 
@@ -230,29 +267,31 @@ namespace Riku_fighter
                 
 
                 //Checks if person is alive or not
-                if (human.State.GetType() != typeof(Deceased))
+                if (sprite.person.State.GetType() != typeof(Deceased))
                 {
                     //every year a persons die probability will increase with 0.005
-                    human.IncDieProb(0.005);
-                    if (human.Partner != null)
+                    sprite.person.IncDieProb(0.005);
+                    if (sprite.person.Partner != null)
                     {
                         //break up
-                        if (new Probability().GetRandomDouble() > BREAKUP_PROB && human.Father != null && human.Mother != null)
+                        if (new Probability().GetRandomDouble() > BREAKUP_PROB && sprite.person.Father != null && sprite.person.Mother != null)
                         {
-                            human.Partner.Partner = null;
-                            human.Partner = null;
+                            sprite.person.Partner.Partner = null;
+                            sprite.person.Partner = null;
                         }
 
-                        if(human.Partner != null)
+                        if(sprite.person.Partner != null)
                         {
                             //todo: probability
                             if (new Probability().GetRandomDouble() < PREGNANT_PROB)
                             {
-                                if (human.GetAge(CurrentDate) > 18 && human.Partner.Gender != human.Gender && human.Mother != null && human.Father != null && human.Partner.State.GetType() != typeof(Deceased))
+                                if (sprite.person.GetAge(CurrentDate) > 18 && sprite.person.Partner.Gender != sprite.person.Gender && sprite.person.Mother != null && sprite.person.Father != null && sprite.person.Partner.State.GetType() != typeof(Deceased))
                                 {
                                     //Needs to add child name and random gender
-                                    Person Child = human.MakeBaby(CurrentDate);
-                                    TempHumanity.Add(Child);
+
+                                    Person Child = sprite.person.MakeBaby(CurrentDate);
+                                    SpriteClass Baby = new SpriteClass(Child);
+                                    TempBabySprites.Add(Baby);
                                 }
                             }
                         }                        
@@ -260,20 +299,20 @@ namespace Riku_fighter
                     else
                     {
                         Probability partnerProb = new Probability(10);
-                        if (PARTNER_PROB * partnerProb.rInt > 3.5 && human.Mother != null && human.Father != null && human.Age > 16)
+                        if (PARTNER_PROB * partnerProb.rInt > 3.5 && sprite.person.Mother != null && sprite.person.Father != null && sprite.person.Age > 16)
                         {
-                            foreach (var newpartner in Humanity)
+                            foreach (var newpartner in AliveSprites)
                             {
                                 //Checks if person if alive or not
-                                if (newpartner.State.GetType() != typeof(Deceased) && newpartner.Age > 16)
+                                if (newpartner.person.State.GetType() != typeof(Deceased) && newpartner.person.Age > 16)
                                 {
-                                    int ageDifference = Math.Abs(human.GetAge(CurrentDate) - newpartner.GetAge(CurrentDate));
-                                    if (newpartner.Father != human.Father || human.Mother != newpartner.Mother)
+                                    int ageDifference = Math.Abs(sprite.person.GetAge(CurrentDate) - newpartner.person.GetAge(CurrentDate));
+                                    if (newpartner.person.Father != sprite.person.Father || sprite.person.Mother != newpartner.person.Mother)
                                     {
-                                        if (newpartner != human && ageDifference < 15 && newpartner.Partner == null)
+                                        if (newpartner.person != sprite.person && ageDifference < 15 && newpartner.person.Partner == null)
                                         {
-                                            newpartner.Partner = human;
-                                            human.Partner = newpartner;
+                                            newpartner.person.Partner = sprite.person;
+                                            sprite.person.Partner = newpartner.person;
                                         }
                                     }
                                 }                                
@@ -282,53 +321,51 @@ namespace Riku_fighter
                     }
                 }
                 //Adds religion
-                if (new Probability().GetRandomDouble() > RELIGION_PROB && human.GetAge(CurrentDate) > 5)
+                if (new Probability().GetRandomDouble() > RELIGION_PROB && sprite.person.GetAge(CurrentDate) > 5)
                 {
                     Probability prob = new Probability(5);
                     switch (prob.rInt)
                     {
                         case 0:
-                            human.Religion = "Atheist";
+                            sprite.person.Religion = "Atheist";
                             break;
                         case 1:
-                            human.Religion = "Buddhism";
+                            sprite.person.Religion = "Buddhism";
                             break;
                         case 2:
-                            human.Religion = "Christianity";
+                            sprite.person.Religion = "Christianity";
                             break;
                         case 3:
-                            human.Religion = "Hinduism";
+                            sprite.person.Religion = "Hinduism";
                             break;
                         case 4:
-                            human.Religion = "Islam";
+                            sprite.person.Religion = "Islam";
                             break;
                     }
                 }
-                population.Add(human);
-                if(human.State.GetType() == typeof(Deceased))
+                population.Add(sprite.person);
+                if(sprite.person.State.GetType() == typeof(Deceased))
                 {
-                    TempDeadPeople.Add(human);
-                    DeadHumans.Add(human);
+                    TempDeadSprites.Add(sprite);
+                    DeadSprites.Add(sprite);
                 }
             }
-            foreach(var deadHuman in TempDeadPeople)
+            foreach(var deadHuman in TempDeadSprites)
             {
-                AliveHumans.Remove(deadHuman);
+                AliveSprites.Remove(deadHuman);
             }
-            TempDeadPeople.Clear();
-            foreach (var temphuman in TempHumanity)
+            foreach (var temphuman in TempBabySprites)
             {
-                population.Add(temphuman);
-                AliveHumans.Add(temphuman);
+                population.Add(temphuman.person);
+                AliveSprites.Add(temphuman);
             }
-            TempHumanity.Clear();
-            Humanity = AliveHumans.Concat(DeadHumans).ToList();
+            HumanitySprites = AliveSprites.Concat(DeadSprites).ToList();
         }
 
         public void testSim()
         {
-            Debug.WriteLine(AliveHumans.Count);
-            Debug.WriteLine(DeadHumans.Count);
+            Debug.WriteLine(AliveSprites.Count);
+            Debug.WriteLine(DeadSprites.Count);
         }
     }
 }

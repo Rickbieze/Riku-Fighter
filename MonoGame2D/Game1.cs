@@ -93,8 +93,8 @@ namespace Riku_fighter
             HPbar2 = Content.Load<Texture2D>("hpbar2");
 
             // Construct SpriteClass objects
-            player1 = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), "W", "A", "S", "D");
-            player2 = new SpriteClass(Content.Load<Texture2D>("playerLeft"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), "Up", "Left", "Down", "Right");
+            player1 = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f));
+            player2 = new SpriteClass(Content.Load<Texture2D>("playerLeft"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f));
 
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
@@ -115,6 +115,8 @@ namespace Riku_fighter
             KeyboardHandler(); // Handle keyboard input
             if (day / 50 == 1 ) {
                 simulator.RunSimulator();
+                simulator.GetBabiesThisRound();
+                simulator.GetDeadThisRound();
                 day = 0;
             }
             // Stop all movement when the game ends
