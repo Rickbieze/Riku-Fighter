@@ -112,11 +112,8 @@ namespace Riku_fighter
         // Updates the logic of the game state each frame, checking for collision, gathering input, etc.
         protected override void Update(GameTime gameTime)
         {
+            
             KeyboardHandler(); // Handle keyboard input
-            if (day / 50 == 1 ) {
-                simulator.RunSimulator();
-                day = 0;
-            }
             // Stop all movement when the game ends
             if (gameOver)
             {
@@ -126,13 +123,22 @@ namespace Riku_fighter
                 player2.dX = 0;
                 player2.dY = 0;
             }
+            if (gameStarted)
+            {
+                if (day / 50 == 1)
+                {
+                    simulator.RunSimulator();
+                    day = 0;
+                    Debug.WriteLine(simulator.getCurrentDate());
+                }
+                player1.Update(gameTime);
+                player2.Update(gameTime);
+                day++;
+            }
 
             // Update animated SpriteClass objects based on their current rates of change
-            player1.Update(gameTime);
-            player2.Update(gameTime);
-
             base.Update(gameTime);
-            day++;
+
         }
 
 
@@ -142,9 +148,6 @@ namespace Riku_fighter
             GraphicsDevice.Clear(Color.CornflowerBlue); // Clear the screen
 
             spriteBatch.Begin(); // Begin drawing
-
-            // Draw grass
-            spriteBatch.Draw(grass, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
 
             if (gameOver)
             {
@@ -163,30 +166,6 @@ namespace Riku_fighter
                 spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth - 100, 50), Color.Red);
             }
 
-            // If the game is not over, draw it in black
-            else spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth / 2, 50), Color.Black);
-
-            // Draw the players with the SpriteClass method
-            player1.Draw(spriteBatch);
-            player2.Draw(spriteBatch);
-
-            //draw the HP bars
-            HPbarFill = new Texture2D(GraphicsDevice, 1, 1);
-            HPbarFill.SetData(new[] { Color.White });
-
-            HPbarFill2 = new Texture2D(GraphicsDevice, 1, 1);
-            HPbarFill2.SetData(new[] { Color.White });
-
-            spriteBatch.Draw(HPbarFill, new Rectangle(130, (int)screenHeight - (int)screenHeight + 65, 250, 15),
-            Color.Red);
-
-            spriteBatch.Draw(HPbarFill2, new Rectangle((int)screenWidth - 375, (int)screenHeight - (int)screenHeight + 65, 250, 15),
-            Color.Red);
-
-            //draw the HP bar UI
-            spriteBatch.Draw(HPbar, new Vector2(50, screenHeight - screenHeight + 50));
-            spriteBatch.Draw(HPbar2, new Vector2(screenWidth - 400, screenHeight - screenHeight + 50));
-
             if (!gameStarted)
             {
                 // Fill the screen with black before the game starts
@@ -203,6 +182,25 @@ namespace Riku_fighter
                 spriteBatch.DrawString(stateFont, title, new Vector2(screenWidth / 2 - titleSize.X / 2, screenHeight / 3), Color.ForestGreen);
                 spriteBatch.DrawString(stateFont, pressSpace, new Vector2(screenWidth / 2 - pressSpaceSize.X / 2, screenHeight / 2), Color.White);
             }
+            if (gameStarted)
+            {
+                // Draw grass
+                spriteBatch.Draw(grass, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
+                // If the game is not over, draw it in black
+                spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth / 2, 50), Color.Black);
+
+                // Draw the players with the SpriteClass method
+                player1.Draw(spriteBatch);
+                player2.Draw(spriteBatch);
+
+                String year = simulator.getCurrentDate();
+                Vector2 yearSize = stateFont.MeasureString(year);
+                spriteBatch.DrawString(stateFont, year, new Vector2(screenWidth / 2 - yearSize.X / 2, screenHeight - 800), Color.White);
+            }
+
+
+            // Draw the text horizontally centered
+
 
             spriteBatch.End(); // Stop drawing
 

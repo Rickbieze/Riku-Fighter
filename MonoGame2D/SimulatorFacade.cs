@@ -330,5 +330,11 @@ namespace Riku_fighter
             Debug.WriteLine(AliveHumans.Count);
             Debug.WriteLine(DeadHumans.Count);
         }
+
+        public String getCurrentDate()
+        {
+            return CurrentDate.ToString();
+        }
+
     }
 }
