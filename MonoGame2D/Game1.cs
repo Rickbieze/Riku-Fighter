@@ -95,6 +95,7 @@ namespace Riku_fighter
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
             stateFont = Content.Load<SpriteFont>("GameState");
+
         }
 
 
@@ -219,6 +220,9 @@ namespace Riku_fighter
             player2.y = screenHeight * SKYRATIO;
 
             score = 0; // Reset score
+
+            SimulatorFacade simulator = new SimulatorFacade();
+            simulator.RunSimulator();
         }
 
 

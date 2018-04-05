@@ -104,8 +104,23 @@
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game1.cs" />
+    <Compile Include="Gender.cs" />
+    <Compile Include="Person.cs" />
+    <Compile Include="Probability.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RaceFactory.cs" />
+    <Compile Include="Race\Australoid.cs" />
+    <Compile Include="Race\Caucasoid.cs" />
+    <Compile Include="Race\IRace.cs" />
+    <Compile Include="Race\Mongoloid.cs" />
+    <Compile Include="Race\Negroid.cs" />
+    <Compile Include="SimulatorFacade.cs" />
     <Compile Include="SpriteClass.cs" />
+    <Compile Include="State\Alive.cs" />
+    <Compile Include="State\Deceased.cs" />
+    <Compile Include="State\Healthy.cs" />
+    <Compile Include="State\IState.cs" />
+    <Compile Include="State\Sick.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
@@ -122,6 +137,8 @@
     <Content Include="Content\grass.png" />
     <Content Include="Content\ninja-cat-dino.png" />
     <Content Include="Content\start-splash.png" />
+    <Content Include="FemaleNames.txt" />
+    <Content Include="MaleNames.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -144,6 +161,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
