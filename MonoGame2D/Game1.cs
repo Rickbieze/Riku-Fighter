@@ -11,7 +11,7 @@ namespace Riku_fighter
     public class Game1 : Game
     {
         // The ratio of the screen that is sky versus ground
-        const float SKYRATIO = 3f / 3f;
+        const float SKYRATIO = 3f / 3.5f;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -28,6 +28,11 @@ namespace Riku_fighter
         Texture2D grass;
         Texture2D startGameSplash;
         Texture2D gameOverTexture;
+
+        Texture2D HPbar;
+        Texture2D HPbar2;
+        Texture2D HPbarFill;
+        Texture2D HPbarFill2;
 
         SpriteClass player1;
         SpriteClass player2;
@@ -65,7 +70,7 @@ namespace Riku_fighter
 
             score = 0;
 
-            this.IsMouseVisible = false; // Hide the mouse within the app window
+            this.IsMouseVisible = true; // Hide the mouse within the app window
 
         }
 
@@ -80,10 +85,12 @@ namespace Riku_fighter
             grass = Content.Load<Texture2D>("grass");
             startGameSplash = Content.Load<Texture2D>("start-splash");
             gameOverTexture = Content.Load<Texture2D>("game-over");
+            HPbar = Content.Load<Texture2D>("hpbar");
+            HPbar2 = Content.Load<Texture2D>("hpbar2");
 
             // Construct SpriteClass objects
-            player1 = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f), "W", "A", "S", "D");
-            player2 = new SpriteClass(Content.Load<Texture2D>("test"), new Vector2(857, 1672), 5, 4, 1, ScaleToHighDPI(5f), "Up", "Left", "Down", "Right");
+            player1 = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), "W", "A", "S", "D");
+            player2 = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), "Up", "Left", "Down", "Right");
 
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
@@ -148,11 +155,28 @@ namespace Riku_fighter
             }
 
             // If the game is not over, draw it in black
-            else spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth - 100, 50), Color.Black);
+            else spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth / 2, 50), Color.Black);
 
             // Draw the players with the SpriteClass method
             player1.Draw(spriteBatch);
             player2.Draw(spriteBatch);
+
+            //draw the HP bars
+            HPbarFill = new Texture2D(GraphicsDevice, 1, 1);
+            HPbarFill.SetData(new[] { Color.White });
+
+            HPbarFill2 = new Texture2D(GraphicsDevice, 1, 1);
+            HPbarFill2.SetData(new[] { Color.White });
+
+            spriteBatch.Draw(HPbarFill, new Rectangle(130, (int)screenHeight - (int)screenHeight + 65, 250, 15),
+            Color.Red);
+
+            spriteBatch.Draw(HPbarFill2, new Rectangle((int)screenWidth - 375, (int)screenHeight - (int)screenHeight + 65, 250, 15),
+            Color.Red);
+
+            //draw the HP bar UI
+            spriteBatch.Draw(HPbar, new Vector2(50, screenHeight - screenHeight + 50));
+            spriteBatch.Draw(HPbar2, new Vector2(screenWidth - 400, screenHeight - screenHeight + 50));
 
             if (!gameStarted)
             {
@@ -187,7 +211,7 @@ namespace Riku_fighter
         // Start a new game, either when the app starts up or after game over
         public void StartGame()
         {
-            // Reset dino position
+            // Reset player position
             player1.x = 50;
             player1.y = screenHeight * SKYRATIO;
 

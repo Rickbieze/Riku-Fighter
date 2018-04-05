@@ -21,8 +21,8 @@ namespace Riku_fighter
         private int timeSinceLastFrame = 0;
         private int millisecondsPerFrame = 180;
 
-        float dinoSpeedX;
-        float dinoJumpY;
+        float xSpeed;
+        float yJump;
         float gravitySpeed;
 
         Enum Up;
@@ -100,8 +100,8 @@ namespace Riku_fighter
 
             totalFrames = rows * columns;
 
-            dinoSpeedX = ScaleToHighDPI(1000f);
-            dinoJumpY = ScaleToHighDPI(-1200f);
+            xSpeed = ScaleToHighDPI(1000f);
+            yJump = ScaleToHighDPI(-1200f);
             gravitySpeed = ScaleToHighDPI(50f);
 
             Up = (Keys)Enum.Parse(typeof(Keys), up);
@@ -181,7 +181,7 @@ namespace Riku_fighter
             // Set right edge
             if (x > screenWidth - texture.Width / 2)
             {
-                x = screenWidth - texture.Width / 2;
+                x = screenWidth - texture.Width / 4;
                 dX = 0;
             }
 
@@ -192,7 +192,7 @@ namespace Riku_fighter
                 dX = 0;
             }
 
-            // Accelerate the dino downward each frame to simulate gravity.
+            // Accelerate the player downward each frame to simulate gravity.
             dY += gravitySpeed;
 
 
@@ -203,17 +203,17 @@ namespace Riku_fighter
 
             if (state.IsKeyDown((Keys)Left))
             {
-                dX = dinoSpeedX * -1;
+                dX = xSpeed * -1;
             }
             if (state.IsKeyDown((Keys)Right))
             {
-                dX = dinoSpeedX;
+                dX = xSpeed;
             }
             if (state.IsKeyDown((Keys)Up))
             {
                 if (y >= screenHeight * SKYRATIO - 1)
                 {
-                    dY = dinoJumpY;
+                    dY = yJump;
                 }
             }
         }
