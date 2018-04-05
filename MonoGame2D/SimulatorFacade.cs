@@ -3,6 +3,7 @@ using Riku_fighter.State;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 //using System.Web.Script.Serialization;
 
 namespace Riku_fighter
@@ -20,6 +21,9 @@ namespace Riku_fighter
 
         public List<Person> Humanity = new List<Person>();
         public List<Person> TempHumanity = new List<Person>();
+        public List<Person> TempDeadPeople = new List<Person>();
+        public List<Person> AliveHumans = new List<Person>();
+        public List<Person> DeadHumans = new List<Person>();
 
         public SimulatorFacade()
         {
@@ -162,7 +166,6 @@ namespace Riku_fighter
             Humanity.Add(Laura);
             Humanity.Add(Gottard);
             Humanity.Add(Gwynevere);
-
             Humanity.Add(Marnix);
             Humanity.Add(Scarlett);
             Humanity.Add(Matthew);
@@ -171,6 +174,23 @@ namespace Riku_fighter
             Humanity.Add(Priscilla);
             Humanity.Add(Mable);
             Humanity.Add(John);
+
+            AliveHumans.Add(Adam);
+            AliveHumans.Add(Eve);
+            AliveHumans.Add(Jacob);
+            AliveHumans.Add(Madison);
+            AliveHumans.Add(James);
+            AliveHumans.Add(Laura);
+            AliveHumans.Add(Gottard);
+            AliveHumans.Add(Gwynevere);
+            AliveHumans.Add(Marnix);
+            AliveHumans.Add(Scarlett);
+            AliveHumans.Add(Matthew);
+            AliveHumans.Add(Saskia);
+            AliveHumans.Add(Gwyn);
+            AliveHumans.Add(Priscilla);
+            AliveHumans.Add(Mable);
+            AliveHumans.Add(John);
         }
                 
         public void RunSimulator()
@@ -179,7 +199,7 @@ namespace Riku_fighter
             CurrentDate = CurrentDate.AddYears(1);
             List<Person> population = new List<Person>();
 
-            foreach (var human in Humanity)
+            foreach (var human in AliveHumans)
             {
                 int age = human.GetAge(CurrentDate);
                 var dieProb = new Probability().GetRandomDouble();
@@ -285,19 +305,30 @@ namespace Riku_fighter
                     }
                 }
                 population.Add(human);
+                if(human.State.GetType() == typeof(Deceased))
+                {
+                    TempDeadPeople.Add(human);
+                    DeadHumans.Add(human);
+                }
             }
+            foreach(var deadHuman in TempDeadPeople)
+            {
+                AliveHumans.Remove(deadHuman);
+            }
+            TempDeadPeople.Clear();
             foreach (var temphuman in TempHumanity)
             {
                 population.Add(temphuman);
+                AliveHumans.Add(temphuman);
             }
             TempHumanity.Clear();
-            Humanity = population;
+            Humanity = AliveHumans.Concat(DeadHumans).ToList();
         }
 
         public void testSim()
         {
-            Debug.WriteLine(Humanity.Count);
-
+            Debug.WriteLine(AliveHumans.Count);
+            Debug.WriteLine(DeadHumans.Count);
         }
     }
 }
