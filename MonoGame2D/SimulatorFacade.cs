@@ -21,6 +21,12 @@ namespace Riku_fighter
         public List<Person> Humanity = new List<Person>();
         public List<Person> TempHumanity = new List<Person>();
 
+        public SimulatorFacade()
+        {
+            CreateHumanity();
+
+        }
+
         public void CreateHumanity()
         {
             Mongoloid Matthew = new Mongoloid()
@@ -169,17 +175,15 @@ namespace Riku_fighter
                 
         public void RunSimulator()
         {
-            CreateHumanity();
-            Debug.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            CurrentDate = CurrentDate.AddYears(30);
-            List<Person> newHumanity = new List<Person>();
+            testSim();
+            CurrentDate = CurrentDate.AddYears(1);
+            List<Person> population = new List<Person>();
 
             foreach (var human in Humanity)
             {
                 int age = human.GetAge(CurrentDate);
                 var dieProb = new Probability().GetRandomDouble();
                 var accProb = new Probability().GetRandomDouble();
-                Debug.WriteLine(human.FirstName + " " + human.LastName);
                 //Console.WriteLine("Die Probability: " + dieProb + "-- Accident Probability: " + accProb);
                 if (dieProb > human.GetDieProb() && human.Mother != null && human.Father != null || accProb > ACCIDENT_PROB && human.Mother != null && human.Father != null)
                 {
@@ -280,14 +284,20 @@ namespace Riku_fighter
                             break;
                     }
                 }
-                newHumanity.Add(human);
+                population.Add(human);
             }
             foreach (var temphuman in TempHumanity)
             {
-                newHumanity.Add(temphuman);
+                population.Add(temphuman);
             }
             TempHumanity.Clear();
-            Humanity = newHumanity;
+            Humanity = population;
+        }
+
+        public void testSim()
+        {
+            Debug.WriteLine(Humanity.Count);
+
         }
     }
 }

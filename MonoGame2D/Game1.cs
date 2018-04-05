@@ -42,6 +42,8 @@ namespace Riku_fighter
         SpriteFont scoreFont;
         SpriteFont stateFont;
 
+        SimulatorFacade simulator;
+        int day = 0;
 
         public Game1()
         {
@@ -54,6 +56,8 @@ namespace Riku_fighter
         // Called once when the app is started
         protected override void Initialize()
         {
+
+            simulator = new SimulatorFacade();
             base.Initialize();
 
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize; // Attempt to launch in fullscreen mode
@@ -109,7 +113,10 @@ namespace Riku_fighter
         protected override void Update(GameTime gameTime)
         {
             KeyboardHandler(); // Handle keyboard input
-
+            if (day / 50 == 1 ) {
+                simulator.RunSimulator();
+                day = 0;
+            }
             // Stop all movement when the game ends
             if (gameOver)
             {
@@ -125,6 +132,7 @@ namespace Riku_fighter
             player2.Update(gameTime);
 
             base.Update(gameTime);
+            day++;
         }
 
 
@@ -220,9 +228,6 @@ namespace Riku_fighter
             player2.y = screenHeight * SKYRATIO;
 
             score = 0; // Reset score
-
-            SimulatorFacade simulator = new SimulatorFacade();
-            simulator.RunSimulator();
         }
 
 
