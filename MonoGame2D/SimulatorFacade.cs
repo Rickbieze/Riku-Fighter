@@ -367,5 +367,11 @@ namespace Riku_fighter
             Debug.WriteLine(AliveSprites.Count);
             Debug.WriteLine(DeadSprites.Count);
         }
+
+        public String getCurrentDate()
+        {
+            return CurrentDate.ToString();
+        }
+
     }
 }
