@@ -21,9 +21,9 @@ namespace Riku_fighter
         private int timeSinceLastFrame = 0;
         private int millisecondsPerFrame = 180;
         public Person person;
-        float xSpeed;
-        float yJump;
-        float gravitySpeed;
+        public float xSpeed;
+        public float yJump;
+        public float gravitySpeed;
 
         //public String checkPerson()
         //{
@@ -101,36 +101,16 @@ namespace Riku_fighter
 
             totalFrames = rows * columns;
 
-            Random rnd = new Random();
-            float speed = rnd.Next(100, 500);
+            int rnd = new Probability().ProbabilitySpeed();
 
-            xSpeed = ScaleToHighDPI(speed);
+            xSpeed = ScaleToHighDPI(rnd);
             yJump = ScaleToHighDPI(-1200f);
             gravitySpeed = ScaleToHighDPI(50f);
 
             // Load the specified texture
             //var stream = TitleContainer.OpenStream(textureName);
             //texture = Texture2D.FromStream(graphicsDevice, stream);
-        }
-
-        public void SetSpriteData(Texture2D texture, Vector2 position, int size, int rows, int columns, float scale)
-        {
-            this.size = size;
-            this.texture = texture;
-            this.rows = rows;
-            this.columns = columns;
-            this.position = position;
-
-            currentFrame = 0;
-
-            this.scale = scale;
-
-            totalFrames = rows * columns;
-
-            xSpeed = ScaleToHighDPI(200f);
-            yJump = ScaleToHighDPI(-1200f);
-            gravitySpeed = ScaleToHighDPI(50f);
-        }
+        } 
 
         public float ScaleToHighDPI(float f)
         {
