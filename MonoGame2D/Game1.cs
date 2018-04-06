@@ -28,6 +28,9 @@ namespace Riku_fighter
         bool gameStarted;
         bool gameOver;
 
+        private string bornMessage = "";
+        private string deathMessage = "";
+
         Texture2D grass;
         Texture2D startGameSplash;
         Texture2D gameOverTexture;
@@ -122,7 +125,7 @@ namespace Riku_fighter
                     List<Person> list = simulator.GetBabiesThisRound();
                     foreach (var item in list.ToList())
                     {
-                        Debug.WriteLine(item.FirstName + " new babies");
+                        bornMessage = item.FirstName + " was born";
                         SpriteClass i;
                         i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
                         players.Add(i);
@@ -132,7 +135,8 @@ namespace Riku_fighter
                     List<Person> deadList = simulator.GetDeadThisRound();
                     foreach (var deadPerson in deadList.ToList())
                     {
-                        Debug.WriteLine(deadPerson.FirstName + " DIED");
+                        deathMessage = deadPerson.FirstName + " is no longer with us.";
+
                         SpriteClass i;
                         i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), deadPerson);
                         foreach (var livingPerson in players.ToList())
@@ -140,7 +144,7 @@ namespace Riku_fighter
                             Person p = livingPerson.person;
                             if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
                             {
-                                Debug.WriteLine("OMG A MATCH " + deadPerson.FirstName + " is dead yo ");
+                                deathMessage = deadPerson.FirstName + " is no longer with us.";
                                 players.Remove(livingPerson);
                             }
                         }
@@ -203,9 +207,6 @@ namespace Riku_fighter
 
                 // Draw the text horizontally centered
                 spriteBatch.DrawString(stateFont, pressEnter, new Vector2(screenWidth / 2 - pressEnterSize.X / 2, screenHeight - 200), Color.White);
-
-                // If the game is over, draw the score in red
-                spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth - 100, 50), Color.Red);
             }
 
             if (!gameStarted)
@@ -228,9 +229,7 @@ namespace Riku_fighter
             {
                 // Draw grass
                 spriteBatch.Draw(grass, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
-                // If the game is not over, draw it in black
-                spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth / 2, 50), Color.Black);
-
+            
                 // Draw the players with the SpriteClass method
                 foreach (var person in players)
                 {
@@ -240,7 +239,7 @@ namespace Riku_fighter
                 //player2.Draw(spriteBatch);
 
                 // draw year
-                String year = simulator.getCurrentDate();
+                String year = "Current year: "+simulator.getCurrentDate();
                 Vector2 yearSize = stateFont.MeasureString(year);
                 spriteBatch.DrawString(stateFont, year, new Vector2(screenWidth / 2 - yearSize.X / 2, screenHeight - 800), Color.White);
 
@@ -249,8 +248,16 @@ namespace Riku_fighter
                 SimulatorStatistics stats = simulator.getSimulatorStatistics();
                 String statistics = "Alive Humans: "+ stats.getAlive().ToString() + " Dead Humans: "+stats.getDead().ToString();
                 Vector2 statsSize = stateFont.MeasureString(statistics);
-
                 spriteBatch.DrawString(stateFont, statistics, new Vector2(screenWidth / 2 - statsSize.X / 2, screenHeight - 900), Color.White);
+
+                // draw simulator message
+
+                Vector2 bornMessageVector = stateFont.MeasureString(bornMessage);
+                spriteBatch.DrawString(stateFont, bornMessage, new Vector2(screenWidth / 3 - bornMessageVector.X / 1, screenHeight - 700), Color.White);
+
+                Vector2 deathMessageVector = stateFont.MeasureString(deathMessage);
+                spriteBatch.DrawString(stateFont, deathMessage, new Vector2(screenWidth / 2 - deathMessageVector.X / 6, screenHeight - 700), Color.White);
+
 
             }
 
