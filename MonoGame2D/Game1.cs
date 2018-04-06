@@ -154,10 +154,14 @@ namespace Riku_fighter
                                 livingPerson.texture = ghost;
                                 livingPerson.xSpeed = 0;
                                 livingPerson.dX = 0;
-                                //livingPerson.dY = -1200f;
                                 livingPerson.gravitySpeed = -20f;
-                                //players.Remove(livingPerson);
-                                //TODO ACTUALLY KILL PEOPLE!
+                                killPerson();
+
+                                 async Task killPerson()
+                                {
+                                    await Task.Delay(2000);
+                                    players.Remove(livingPerson);
+                                }
                             }
                         }
 
