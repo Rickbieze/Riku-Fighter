@@ -149,7 +149,7 @@ namespace Riku_fighter
                             if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
                             {
                                 addConsoleMessage(deadPerson.FirstName + " is no longer with us.");
-                                players.Remove(livingPerson);
+                                //players.Remove(livingPerson);
                                 deathMessage = deadPerson.FirstName + " is no longer with us.";
                                 livingPerson.texture = ghost;
                                 livingPerson.xSpeed = 0;
