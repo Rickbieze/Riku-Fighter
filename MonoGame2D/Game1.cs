@@ -149,7 +149,6 @@ namespace Riku_fighter
                             if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
                             {
                                 addConsoleMessage(deadPerson.FirstName + " is no longer with us.");
-                                //players.Remove(livingPerson);
                                 deathMessage = deadPerson.FirstName + " is no longer with us.";
                                 livingPerson.texture = ghost;
                                 livingPerson.xSpeed = 0;
@@ -157,7 +156,7 @@ namespace Riku_fighter
                                 livingPerson.gravitySpeed = -20f;
                                 killPerson();
 
-                                 async Task killPerson()
+                                async Task killPerson()
                                 {
                                     await Task.Delay(2000);
                                     players.Remove(livingPerson);

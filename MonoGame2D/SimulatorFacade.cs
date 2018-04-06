@@ -232,7 +232,7 @@ namespace Riku_fighter
             CurrentDate = CurrentDate.AddYears(1);
             List<Person> population = new List<Person>();
 
-            foreach (var sprite in AliveHumans)
+            foreach (var sprite in AliveHumans.ToList())
             {
                 int age = sprite.GetAge(CurrentDate);
                 var dieProb = new Probability().GetRandomDouble();
@@ -355,6 +355,7 @@ namespace Riku_fighter
             {
                 AliveHumans.Remove(deadHuman);
                 DeadHumans.Add(deadHuman);
+                TempDeadPeople.Add(deadHuman);
             }
             foreach (var temphuman in TempBaby.ToList())
             {
