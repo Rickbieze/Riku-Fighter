@@ -207,8 +207,8 @@ namespace Riku_fighter
                 // Fill the screen with black before the game starts
                 spriteBatch.Draw(startGameSplash, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
 
-                String title = "Riku Fighter";
-                String pressSpace = "Press Space to start";
+                String title = "Life Simulator";
+                String pressSpace = "Press Space to start the simulation";
 
                 // Measure the size of text in the given font
                 Vector2 titleSize = stateFont.MeasureString(title);
