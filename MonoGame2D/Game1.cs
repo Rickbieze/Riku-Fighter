@@ -130,7 +130,7 @@ namespace Riku_fighter
                         i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
                         players.Add(i);
                     }
-                    simulator.deleteBabyList();
+                    simulator.DeleteBabyList();
 
                     List<Person> deadList = simulator.GetDeadThisRound();
                     foreach (var deadPerson in deadList.ToList())
@@ -151,7 +151,7 @@ namespace Riku_fighter
 
 
                     }
-                    simulator.deleteDeadList();
+                    simulator.DeleteDeadList();
                     simulator.GetDeadThisRound();
                     day = 0;
                 }
