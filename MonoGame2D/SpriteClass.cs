@@ -10,10 +10,6 @@ namespace Riku_fighter
 {
     public class SpriteClass
     {
-        public SpriteClass(Person person)
-        {
-            this.person = person;
-        }
         const float HITBOXSCALE = .5f; // experiment with this value to make the collision detection more or less forgiving
 
         private int rows;
@@ -29,11 +25,10 @@ namespace Riku_fighter
         float yJump;
         float gravitySpeed;
 
-        Enum Up;
-        Enum Right;
-        Enum Left;
-        Enum Down;
+        //public String checkPerson()
+        //{
 
+        //}
         // sprite texture
         public Texture2D texture
         {
@@ -91,13 +86,14 @@ namespace Riku_fighter
         }
 
         // Constructor
-        public SpriteClass(Texture2D texture, Vector2 position, int size, int rows, int columns, float scale)
+        public SpriteClass(Texture2D texture, Vector2 position, int size, int rows, int columns, float scale, Person person)
         {
             this.size = size;
             this.texture = texture;
             this.rows = rows;
             this.columns = columns;
             this.position = position;
+            this.person = person;
 
             currentFrame = 0;
 
@@ -215,28 +211,6 @@ namespace Riku_fighter
 
             // Accelerate the player downward each frame to simulate gravity.
             dY += gravitySpeed;
-
-
-            if (state.Equals(new KeyboardState()))
-            {
-                //dX = 0;
-            }
-
-            if (state.IsKeyDown((Keys)Left))
-            {
-                dX = xSpeed * -1;
-            }
-            if (state.IsKeyDown((Keys)Right))
-            {
-                dX = xSpeed;
-            }
-            if (state.IsKeyDown((Keys)Up))
-            {
-                if (y >= screenHeight * SKYRATIO - 1)
-                {
-                    dY = yJump;
-                }
-            }
         }
     }
 }
