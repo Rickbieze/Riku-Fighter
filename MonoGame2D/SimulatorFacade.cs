@@ -366,6 +366,11 @@ namespace Riku_fighter
         {
             Debug.WriteLine(AliveSprites.Count);
             Debug.WriteLine(DeadSprites.Count);
+            if (AliveSprites.Count > 17)
+            {
+                Debug.WriteLine(AliveSprites[17].person.FirstName);
+            }
+
         }
 
         public String getCurrentDate()
