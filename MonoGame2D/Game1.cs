@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
 
@@ -29,11 +31,7 @@ namespace Riku_fighter
         Texture2D startGameSplash;
         Texture2D gameOverTexture;
 
-        Texture2D HPbar;
-        Texture2D HPbar2;
-        Texture2D HPbarFill;
-        Texture2D HPbarFill2;
-
+        List<SpriteClass> players;
         SpriteClass player1;
         SpriteClass player2;
 
@@ -76,6 +74,8 @@ namespace Riku_fighter
 
             this.IsMouseVisible = true; // Hide the mouse within the app window
 
+            players = new List<SpriteClass>();
+
         }
 
 
@@ -89,12 +89,10 @@ namespace Riku_fighter
             grass = Content.Load<Texture2D>("grass");
             startGameSplash = Content.Load<Texture2D>("start-splash");
             gameOverTexture = Content.Load<Texture2D>("game-over");
-            HPbar = Content.Load<Texture2D>("hpbar");
-            HPbar2 = Content.Load<Texture2D>("hpbar2");
 
             // Construct SpriteClass objects
-            player1 = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f));
-            player2 = new SpriteClass(Content.Load<Texture2D>("playerLeft"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f));
+            //player1 = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f));
+            //player2 = new SpriteClass(Content.Load<Texture2D>("playerLeft"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f));
 
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
@@ -116,19 +114,47 @@ namespace Riku_fighter
             KeyboardHandler(); // Handle keyboard input
             if (day / 50 == 1 ) {
                 simulator.RunSimulator();
-                simulator.GetBabiesThisRound();
+                List<Person> list = simulator.GetBabiesThisRound();
+                foreach (var item in list)
+                {
+                    Debug.WriteLine(item.FirstName + " new babies");
+                    SpriteClass i;
+                    i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
+                    players.Add(i);
+                }
+                simulator.deleteBabyList();
+
+                List<Person> deadList = simulator.GetDeadThisRound();
+                foreach (var deadPerson in deadList)
+                {
+                    Debug.WriteLine(deadPerson.FirstName + " DIED");
+                    SpriteClass i;
+                    i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), deadPerson);
+                    foreach (var livingPerson in players.ToList())
+                    {
+                        Person p = livingPerson.person;
+                        if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
+                        {
+                            Debug.WriteLine("OMG A MATCH " + deadPerson.FirstName + " is dead yo ");
+                            players.Remove(livingPerson);
+                        }
+                    }
+                        
+                    
+                }
+                simulator.deleteDeadList();
                 simulator.GetDeadThisRound();
                 day = 0;
             }
             // Stop all movement when the game ends
-            if (gameOver)
-            {
-                player1.dX = 0;
-                player1.dY = 0;
+            //if (gameOver)
+            //{
+            //    player1.dX = 0;
+            //    player1.dY = 0;
 
-                player2.dX = 0;
-                player2.dY = 0;
-            }
+            //    player2.dX = 0;
+            //    player2.dY = 0;
+            //}
             if (gameStarted)
             {
                 if (day / 50 == 1)
@@ -137,8 +163,12 @@ namespace Riku_fighter
                     day = 0;
                     Debug.WriteLine(simulator.getCurrentDate());
                 }
-                player1.Update(gameTime);
-                player2.Update(gameTime);
+                foreach (var person in players)
+                {
+                    person.Update(gameTime);
+                }
+                
+                //player2.Update(gameTime);
                 day++;
             }
 
@@ -196,8 +226,12 @@ namespace Riku_fighter
                 spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth / 2, 50), Color.Black);
 
                 // Draw the players with the SpriteClass method
-                player1.Draw(spriteBatch);
-                player2.Draw(spriteBatch);
+                foreach (var person in players)
+                {
+                    person.Draw(spriteBatch);
+                }
+                //player1.Draw(spriteBatch);
+                //player2.Draw(spriteBatch);
 
                 String year = simulator.getCurrentDate();
                 Vector2 yearSize = stateFont.MeasureString(year);
@@ -224,12 +258,11 @@ namespace Riku_fighter
         // Start a new game, either when the app starts up or after game over
         public void StartGame()
         {
-            // Reset player position
-            player1.x = 0;
-            player1.y = screenHeight * SKYRATIO;
-
-            player2.x = screenWidth;
-            player2.y = screenHeight * SKYRATIO;
+            foreach (var person in players)
+            {
+                person.x = 0;
+                person.y = screenHeight * SKYRATIO;
+            }
 
             score = 0; // Reset score
         }
@@ -267,8 +300,13 @@ namespace Riku_fighter
                 }
             }
 
-            player1.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
-            player2.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
+            foreach (var person in players)
+            {
+                person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
+            }
+
+            //player1.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
+            //player2.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
         }
     }
 }
