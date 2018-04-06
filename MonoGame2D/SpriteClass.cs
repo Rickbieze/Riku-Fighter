@@ -101,7 +101,10 @@ namespace Riku_fighter
 
             totalFrames = rows * columns;
 
-            xSpeed = ScaleToHighDPI(200f);
+            Random rnd = new Random();
+            float speed = rnd.Next(100, 500);
+
+            xSpeed = ScaleToHighDPI(speed);
             yJump = ScaleToHighDPI(-1200f);
             gravitySpeed = ScaleToHighDPI(50f);
 

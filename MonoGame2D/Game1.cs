@@ -120,7 +120,7 @@ namespace Riku_fighter
                     Task simulate = new Task(simulator.RunSimulator);
                     simulate.Start();
                     List<Person> list = simulator.GetBabiesThisRound();
-                    foreach (var item in list)
+                    foreach (var item in list.ToList())
                     {
                         Debug.WriteLine(item.FirstName + " new babies");
                         SpriteClass i;
@@ -130,7 +130,7 @@ namespace Riku_fighter
                     simulator.deleteBabyList();
 
                     List<Person> deadList = simulator.GetDeadThisRound();
-                    foreach (var deadPerson in deadList)
+                    foreach (var deadPerson in deadList.ToList())
                     {
                         Debug.WriteLine(deadPerson.FirstName + " DIED");
                         SpriteClass i;
@@ -239,9 +239,19 @@ namespace Riku_fighter
                 //player1.Draw(spriteBatch);
                 //player2.Draw(spriteBatch);
 
+                // draw year
                 String year = simulator.getCurrentDate();
                 Vector2 yearSize = stateFont.MeasureString(year);
                 spriteBatch.DrawString(stateFont, year, new Vector2(screenWidth / 2 - yearSize.X / 2, screenHeight - 800), Color.White);
+
+
+                // draw stats
+                SimulatorStatistics stats = simulator.getSimulatorStatistics();
+                String statistics = "Alive Humans: "+ stats.getAlive().ToString() + " Dead Humans: "+stats.getDead().ToString();
+                Vector2 statsSize = stateFont.MeasureString(statistics);
+
+                spriteBatch.DrawString(stateFont, statistics, new Vector2(screenWidth / 2 - statsSize.X / 2, screenHeight - 900), Color.White);
+
             }
 
 
