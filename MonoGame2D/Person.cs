@@ -10,8 +10,7 @@ namespace Riku_fighter
     public abstract class Person
     {
         protected double DIE_PROB = 0.99;
-        private List<string> FemaleNames = new List<string>();
-        private List<string> MaleNames = new List<string>();
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Person Father { get; set; }
@@ -42,7 +41,6 @@ namespace Riku_fighter
             RaceFactory raceFactory = new RaceFactory();
             Race = raceFactory.CreateRace(Father, Mother);
             Children = new List<Person>();
-            PopulateNames();
         }
 
         public int GetAge(DateTime CurrentDate)
@@ -79,50 +77,8 @@ namespace Riku_fighter
             DIE_PROB += amount;
         }
 
-        public void PopulateNames()
+        public Person MakeBaby(DateTime born, String Mname, String Fname)
         {
-           
-            // string maleNames = System.IO.File.ReadAllText(@"C:\Users\" + Environment.UserName + @"\Source\Repos\LifeSimulator\LifeSimulator\LifeSimulator\MaleNames.txt");
-            Task<String> femaleTask = new Task<String>(() =>
-            {
-                string femaleName = System.IO.File.ReadAllText(Directory.GetCurrentDirectory() + "\\FemaleNames.txt");
-                return femaleName;
-            });
-
-            Task<String> maleTask = new Task<String>(() =>
-            {
-                string maleName = System.IO.File.ReadAllText(Directory.GetCurrentDirectory() + "\\MaleNames.txt");
-                return maleName;
-            });
-
-            femaleTask.Start();
-            maleTask.Start();
-
-            femaleTask.Wait();
-            maleTask.Wait();
-
-            string femaleNames = femaleTask.Result;
-            string maleNames = maleTask.Result;
-
-            string[] tempFemale = femaleNames.Split(',');
-            foreach (var x in tempFemale)
-            {
-                var y = x.Substring(1);
-                var name = y.TrimEnd('"');
-                FemaleNames.Add(name);
-            }
-
-            string[] tempMale = maleNames.Split(',');
-            foreach (var x in tempMale)
-            {
-                var y = x.Substring(1);
-                MaleNames.Add(y.TrimEnd('"'));
-            }
-        }
-
-        public Person MakeBaby(DateTime born)
-        {
-            PopulateNames();
             RaceFactory factory = new RaceFactory();
 
             var race = factory.CreateRace(Father, Mother);
@@ -148,22 +104,21 @@ namespace Riku_fighter
                 Probability getGender = new Probability(2);
                 if (getGender.rInt == 0)
                 {
-                    Probability femaleNameProb = new Probability(FemaleNames.Count);
                     if (Father.Race.GetType() == typeof(Mongoloid))
                     {
-                        Child = new Mongoloid(FemaleNames[femaleNameProb.rInt], ChildsFather, ChildsMother, Mother.Gender, born);
+                        Child = new Mongoloid(Fname, ChildsFather, ChildsMother, Mother.Gender, born);
                     }
                     else if (Father.Race.GetType() == typeof(Australoid))
                     {
-                        Child = new Australoid(FemaleNames[femaleNameProb.rInt], ChildsFather, ChildsMother, Mother.Gender, born);
+                        Child = new Australoid(Fname, ChildsFather, ChildsMother, Mother.Gender, born);
                     }
                     else if (Father.Race.GetType() == typeof(Negroid))
                     {
-                        Child = new Negroid(FemaleNames[femaleNameProb.rInt], ChildsFather, ChildsMother, Mother.Gender, born);
+                        Child = new Negroid(Fname, ChildsFather, ChildsMother, Mother.Gender, born);
                     }
                     else
                     {
-                        Child = new Caucasoid(FemaleNames[femaleNameProb.rInt], ChildsFather, ChildsMother, Mother.Gender, born);
+                        Child = new Caucasoid(Fname, ChildsFather, ChildsMother, Mother.Gender, born);
                     }
 
                     Children.Add(Child);
@@ -171,22 +126,21 @@ namespace Riku_fighter
                 }
                 else
                 {
-                    Probability maleNameProb = new Probability(MaleNames.Count);
                     if (Father.Race.GetType() == typeof(Mongoloid))
                     {
-                        Child = new Mongoloid(MaleNames[maleNameProb.rInt], ChildsFather, ChildsMother, Father.Gender, born);
+                        Child = new Mongoloid(Mname, ChildsFather, ChildsMother, Father.Gender, born);
                     }
                     else if (Father.Race.GetType() == typeof(Australoid))
                     {
-                        Child = new Australoid(MaleNames[maleNameProb.rInt], ChildsFather, ChildsMother, Father.Gender, born);
+                        Child = new Australoid(Mname, ChildsFather, ChildsMother, Father.Gender, born);
                     }
                     else if (Father.Race.GetType() == typeof(Negroid))
                     {
-                        Child = new Negroid(MaleNames[maleNameProb.rInt], ChildsFather, ChildsMother, Father.Gender, born);
+                        Child = new Negroid(Mname, ChildsFather, ChildsMother, Father.Gender, born);
                     }
                     else
                     {
-                        Child = new Caucasoid(MaleNames[maleNameProb.rInt], ChildsFather, ChildsMother, Father.Gender, born);
+                        Child = new Caucasoid(Mname, ChildsFather, ChildsMother, Father.Gender, born);
                     }
                     Children.Add(Child);
                     Partner.Children.Add(Child);
