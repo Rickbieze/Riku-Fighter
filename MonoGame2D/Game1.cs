@@ -16,6 +16,8 @@ namespace Riku_fighter
         // The ratio of the screen that is sky versus ground
         const float SKYRATIO = 3f / 3.5f;
 
+        private List<String> messages;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -43,6 +45,7 @@ namespace Riku_fighter
 
         SpriteFont scoreFont;
         SpriteFont stateFont;
+        SpriteFont consoleFont;
 
         SimulatorFacade simulator;
         int day = 0;
@@ -58,7 +61,7 @@ namespace Riku_fighter
         // Called once when the app is started
         protected override void Initialize()
         {
-
+            messages = new List<string>();
             simulator = new SimulatorFacade();
             base.Initialize();
 
@@ -77,7 +80,7 @@ namespace Riku_fighter
             score = 0;
 
             this.IsMouseVisible = true; // Hide the mouse within the app window
-
+            graphics.IsFullScreen = true;
             players = new List<SpriteClass>();
 
         }
@@ -101,6 +104,7 @@ namespace Riku_fighter
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
             stateFont = Content.Load<SpriteFont>("GameState");
+            consoleFont = Content.Load<SpriteFont>("File");
 
         }
 
@@ -125,7 +129,7 @@ namespace Riku_fighter
                     List<Person> list = simulator.GetBabiesThisRound();
                     foreach (var item in list.ToList())
                     {
-                        bornMessage = item.FirstName + " was born";
+                        addConsoleMessage(item.FirstName + " was born");
                         SpriteClass i;
                         i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
                         players.Add(i);
@@ -135,8 +139,6 @@ namespace Riku_fighter
                     List<Person> deadList = simulator.GetDeadThisRound();
                     foreach (var deadPerson in deadList.ToList())
                     {
-                        deathMessage = deadPerson.FirstName + " is no longer with us.";
-
                         SpriteClass i;
                         i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), deadPerson);
                         foreach (var livingPerson in players.ToList())
@@ -144,7 +146,7 @@ namespace Riku_fighter
                             Person p = livingPerson.person;
                             if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
                             {
-                                deathMessage = deadPerson.FirstName + " is no longer with us.";
+                                addConsoleMessage(deadPerson.FirstName + " is no longer with us.");
                                 players.Remove(livingPerson);
                             }
                         }
@@ -185,6 +187,18 @@ namespace Riku_fighter
             // Update animated SpriteClass objects based on their current rates of change
             base.Update(gameTime);
 
+        }
+
+        public void addConsoleMessage(String message)
+        {
+            if(messages.Count > 20)
+            {
+                messages.RemoveAt(0);
+                messages.Add(message);
+            }
+            else { 
+                messages.Add(message);
+            }
         }
 
 
@@ -251,12 +265,19 @@ namespace Riku_fighter
                 spriteBatch.DrawString(stateFont, statistics, new Vector2(screenWidth / 2 - statsSize.X / 2, screenHeight - 900), Color.White);
 
                 // draw simulator message
+                int messageY = 0;
+                foreach (var message in messages)
+                {
+                   
+                    spriteBatch.DrawString(consoleFont, message, new Vector2(0, messageY), Color.White);
+                    messageY = messageY + 18;
 
-                Vector2 bornMessageVector = stateFont.MeasureString(bornMessage);
-                spriteBatch.DrawString(stateFont, bornMessage, new Vector2(screenWidth / 3 - bornMessageVector.X / 1, screenHeight - 700), Color.White);
+                }
+                //Vector2 bornMessageVector = stateFont.MeasureString(bornMessage);
+                //spriteBatch.DrawString(stateFont, bornMessage, new Vector2(screenWidth / 3 - bornMessageVector.X / 1, screenHeight - 700), Color.White);
 
-                Vector2 deathMessageVector = stateFont.MeasureString(deathMessage);
-                spriteBatch.DrawString(stateFont, deathMessage, new Vector2(screenWidth / 2 - deathMessageVector.X / 6, screenHeight - 700), Color.White);
+                //Vector2 deathMessageVector = stateFont.MeasureString(deathMessage);
+                //spriteBatch.DrawString(stateFont, deathMessage, new Vector2(screenWidth / 2 - deathMessageVector.X / 6, screenHeight - 700), Color.White);
 
 
             }
