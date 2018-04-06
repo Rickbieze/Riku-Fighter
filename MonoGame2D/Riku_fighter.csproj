@@ -133,11 +133,23 @@
     <None Include="MonoGame2D_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\AusFL.png" />
+    <Content Include="Content\AusFR.png" />
+    <Content Include="Content\AusML.png" />
+    <Content Include="Content\AusMR.png" />
     <Content Include="Content\broccoli.png" />
     <Content Include="Content\femaleLeft.png" />
     <Content Include="Content\femaleRight.png" />
     <Content Include="Content\game-over.png" />
     <Content Include="Content\grass.png" />
+    <Content Include="Content\MongFL.png" />
+    <Content Include="Content\MongFR.png" />
+    <Content Include="Content\MongML.png" />
+    <Content Include="Content\MongMR.png" />
+    <Content Include="Content\NegFL.png" />
+    <Content Include="Content\NegFR.png" />
+    <Content Include="Content\NegML.png" />
+    <Content Include="Content\NegMR.png" />
     <Content Include="Content\ninja-cat-dino.png" />
     <Content Include="Content\start-splash.png" />
     <Content Include="FemaleNames.txt" />

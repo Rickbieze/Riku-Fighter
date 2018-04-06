@@ -368,15 +368,43 @@ namespace Riku_fighter
             {
                 if(person.person.Gender == Gender.Genders.female)
                 {
-                    person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("femaleRight"), Content.Load<Texture2D>("femaleLeft"));
+                    if(person.person.Race.GetType() == typeof(Race.Caucasoid))
+                    {
+                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("femaleRight"), Content.Load<Texture2D>("femaleLeft"));
+                    }
+                    else if(person.person.Race.GetType() == typeof(Race.Negroid))
+                    {
+                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("NegFR"), Content.Load<Texture2D>("NegFL"));
+                    }
+                    else if(person.person.Race.GetType() == typeof(Race.Mongoloid))
+                    {
+                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("MongFR"), Content.Load<Texture2D>("MongFL"));
+                    }
+                    else
+                    {
+                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("AusFR"), Content.Load<Texture2D>("AusFL"));
+                    }
                 }
                 else
                 {
-                    person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
+                    if (person.person.Race.GetType() == typeof(Race.Caucasoid))
+                    {
+                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
+                    }
+                    else if (person.person.Race.GetType() == typeof(Race.Negroid))
+                    {
+                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("NegMR"), Content.Load<Texture2D>("NegML"));
+                    }
+                    else if (person.person.Race.GetType() == typeof(Race.Mongoloid))
+                    {
+                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("MongMR"), Content.Load<Texture2D>("MongML"));
+                    }
+                    else
+                    {
+                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("AusMR"), Content.Load<Texture2D>("AusML"));
+                    }
                 }
-                
             }
-
             //player1.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
             //player2.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
         }
