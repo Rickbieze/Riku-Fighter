@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
+using System.Threading.Tasks;
 
 namespace Riku_fighter
 {
@@ -51,12 +52,10 @@ namespace Riku_fighter
             Content.RootDirectory = "Content";  // Set the directory where game assets can be found by the ContentManager
         }
 
-
         // Give variables their initial states
         // Called once when the app is started
         protected override void Initialize()
         {
-
             simulator = new SimulatorFacade();
             base.Initialize();
 
@@ -129,11 +128,12 @@ namespace Riku_fighter
                 player2.dX = 0;
                 player2.dY = 0;
             }
-            if (gameStarted)
+            if (!gameStarted)
             {
                 if (day / 50 == 1)
                 {
-                    simulator.RunSimulator();
+                    Task task = new Task(simulator.RunSimulator);
+                    task.Start();
                     day = 0;
                     Debug.WriteLine(simulator.getCurrentDate());
                 }
