@@ -24,5 +24,12 @@ namespace Riku_fighter
             Random random = new Random(Guid.NewGuid().GetHashCode());
             return random.NextDouble() * (1.0 - 0.0) + 0.0;
         }
+
+        public int ProbabilitySpeed()
+        {
+            Random random = new Random(Guid.NewGuid().GetHashCode());
+            rInt = random.Next(100, 450);
+            return rInt;
+        }
     }
 }
