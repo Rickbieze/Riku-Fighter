@@ -36,6 +36,7 @@ namespace Riku_fighter
         Texture2D grass;
         Texture2D startGameSplash;
         Texture2D gameOverTexture;
+        Texture2D ghost;
 
         List<SpriteClass> players;
         SpriteClass player1;
@@ -106,6 +107,7 @@ namespace Riku_fighter
             stateFont = Content.Load<SpriteFont>("GameState");
             consoleFont = Content.Load<SpriteFont>("File");
 
+            ghost = Content.Load<Texture2D>("Ghost");
         }
 
 
@@ -148,6 +150,14 @@ namespace Riku_fighter
                             {
                                 addConsoleMessage(deadPerson.FirstName + " is no longer with us.");
                                 players.Remove(livingPerson);
+                                deathMessage = deadPerson.FirstName + " is no longer with us.";
+                                livingPerson.texture = ghost;
+                                livingPerson.xSpeed = 0;
+                                livingPerson.dX = 0;
+                                //livingPerson.dY = -1200f;
+                                livingPerson.gravitySpeed = -20f;
+                                //players.Remove(livingPerson);
+                                //TODO ACTUALLY KILL PEOPLE!
                             }
                         }
 
@@ -299,18 +309,25 @@ namespace Riku_fighter
             return f;
         }
 
-        // Start a new game, either when the app starts up or after game over
-        public void StartGame()
+        private async Task initialSpawn()
         {
-            foreach (var person in players)
+            foreach (var human in simulator.AliveHumans)
             {
-                person.x = 0;
-                person.y = screenHeight * SKYRATIO;
+                Debug.WriteLine("-CREATION OF MANKIND-");
+                SpriteClass i;
+                i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), human);
+                players.Add(i);
             }
+            await Task.Delay(TimeSpan.FromSeconds(1));
+        }
+
+        // Start a new game, either when the app starts up or after game over
+        public async void StartGame()
+        {
+            await initialSpawn();
 
             score = 0; // Reset score
         }
-
 
         // Handle user input from the keyboard
         public void KeyboardHandler()
