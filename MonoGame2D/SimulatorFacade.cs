@@ -294,7 +294,7 @@ namespace Riku_fighter
                         if(sprite.Partner != null)
                         {
                             //todo: probability
-                            if (new Probability().GetRandomDouble() < PREGNANT_PROB && AliveHumans.Count() > 50)
+                            if (new Probability().GetRandomDouble() < PREGNANT_PROB && AliveHumans.Count() < 50)
                             {
                                 if (sprite.GetAge(CurrentDate) > 18 && sprite.Partner.Gender != sprite.Gender && sprite.Mother != null && sprite.Father != null && sprite.Partner.State.GetType() != typeof(Deceased))
                                 {
