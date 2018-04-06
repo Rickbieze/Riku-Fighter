@@ -318,7 +318,15 @@ namespace Riku_fighter
 
             foreach (var person in players)
             {
-                person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
+                if(person.person.Gender == Gender.Genders.female)
+                {
+                    person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("femaleRight"), Content.Load<Texture2D>("femaleLeft"));
+                }
+                else
+                {
+                    person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
+                }
+                
             }
 
             //player1.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
