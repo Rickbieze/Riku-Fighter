@@ -239,9 +239,19 @@ namespace Riku_fighter
                 //player1.Draw(spriteBatch);
                 //player2.Draw(spriteBatch);
 
+                // draw year
                 String year = simulator.getCurrentDate();
                 Vector2 yearSize = stateFont.MeasureString(year);
                 spriteBatch.DrawString(stateFont, year, new Vector2(screenWidth / 2 - yearSize.X / 2, screenHeight - 800), Color.White);
+
+
+                // draw stats
+                SimulatorStatistics stats = simulator.getSimulatorStatistics();
+                String statistics = "Alive Humans: "+ stats.getAlive().ToString() + " Dead Humans: "+stats.getDead().ToString();
+                Vector2 statsSize = stateFont.MeasureString(statistics);
+
+                spriteBatch.DrawString(stateFont, statistics, new Vector2(screenWidth / 2 - statsSize.X / 2, screenHeight - 900), Color.White);
+
             }
 
 

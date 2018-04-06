@@ -376,6 +376,12 @@ namespace Riku_fighter
             HumanitySprites = AliveHumans.Concat(DeadSprites).ToList();
         }
 
+        public SimulatorStatistics getSimulatorStatistics()
+        {
+            SimulatorStatistics stats = new SimulatorStatistics(DeadHumans.Count, AliveHumans.Count);
+            return stats;
+        }
+
         public void testSim()
         {
             Debug.WriteLine(AliveHumans.Count + " alive");
