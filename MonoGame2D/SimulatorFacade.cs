@@ -3,13 +3,18 @@ using Riku_fighter.State;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 //using System.Web.Script.Serialization;
 
 namespace Riku_fighter
 {
     public class SimulatorFacade
     {
+        private List<string> FemaleNames = new List<string>();
+        private List<string> MaleNames = new List<string>();
+
         public DateTime CurrentDate = DateTime.Now;
         private static readonly double ACCIDENT_PROB = 0.99;
 
@@ -32,6 +37,7 @@ namespace Riku_fighter
 
         public SimulatorFacade()
         {
+            PopulateNames();
             CreateHumanity();
         }
 
@@ -288,13 +294,16 @@ namespace Riku_fighter
                         if(sprite.Partner != null)
                         {
                             //todo: probability
-                            if (new Probability().GetRandomDouble() < PREGNANT_PROB)
+                            if (new Probability().GetRandomDouble() < PREGNANT_PROB && AliveHumans.Count() > 50)
                             {
                                 if (sprite.GetAge(CurrentDate) > 18 && sprite.Partner.Gender != sprite.Gender && sprite.Mother != null && sprite.Father != null && sprite.Partner.State.GetType() != typeof(Deceased))
                                 {
                                     //Needs to add child name and random gender
-
-                                    Person Child = sprite.MakeBaby(CurrentDate);
+                                    Probability femaleNameProb = new Probability(FemaleNames.Count);
+                                    Probability maleNameProb = new Probability(MaleNames.Count);
+                                    String Fname = FemaleNames[femaleNameProb.rInt];
+                                    String Mname = MaleNames[maleNameProb.rInt];
+                                    Person Child = sprite.MakeBaby(CurrentDate, Mname, Fname);
                                     Person Baby = Child;
                                     TempBabySprites.Add(Baby);
                                 }
@@ -378,5 +387,45 @@ namespace Riku_fighter
             return CurrentDate.ToString();
         }
 
+        public void PopulateNames()
+        {
+
+            // string maleNames = System.IO.File.ReadAllText(@"C:\Users\" + Environment.UserName + @"\Source\Repos\LifeSimulator\LifeSimulator\LifeSimulator\MaleNames.txt");
+            Task<String> femaleTask = new Task<String>(() =>
+            {
+                string femaleName = System.IO.File.ReadAllText(Directory.GetCurrentDirectory() + "\\FemaleNames.txt");
+                return femaleName;
+            });
+
+            Task<String> maleTask = new Task<String>(() =>
+            {
+                string maleName = System.IO.File.ReadAllText(Directory.GetCurrentDirectory() + "\\MaleNames.txt");
+                return maleName;
+            });
+
+            femaleTask.Start();
+            maleTask.Start();
+
+            femaleTask.Wait();
+            maleTask.Wait();
+
+            string femaleNames = femaleTask.Result;
+            string maleNames = maleTask.Result;
+
+            string[] tempFemale = femaleNames.Split(',');
+            foreach (var x in tempFemale)
+            {
+                var y = x.Substring(1);
+                var name = y.TrimEnd('"');
+                FemaleNames.Add(name);
+            }
+
+            string[] tempMale = maleNames.Split(',');
+            foreach (var x in tempMale)
+            {
+                var y = x.Substring(1);
+                MaleNames.Add(y.TrimEnd('"'));
+            }
+        }
     }
 }
