@@ -390,7 +390,7 @@ namespace Riku_fighter
 
         public String getCurrentDate()
         {
-            return CurrentDate.ToString();
+            return CurrentDate.Year.ToString();
         }
 
         public void PopulateNames()
