@@ -120,7 +120,7 @@ namespace Riku_fighter
                     Task simulate = new Task(simulator.RunSimulator);
                     simulate.Start();
                     List<Person> list = simulator.GetBabiesThisRound();
-                    foreach (var item in list)
+                    foreach (var item in list.ToList())
                     {
                         Debug.WriteLine(item.FirstName + " new babies");
                         SpriteClass i;
@@ -130,7 +130,7 @@ namespace Riku_fighter
                     simulator.deleteBabyList();
 
                     List<Person> deadList = simulator.GetDeadThisRound();
-                    foreach (var deadPerson in deadList)
+                    foreach (var deadPerson in deadList.ToList())
                     {
                         Debug.WriteLine(deadPerson.FirstName + " DIED");
                         SpriteClass i;
