@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
+using System.Threading.Tasks;
 
 namespace Riku_fighter
 {
@@ -112,39 +113,44 @@ namespace Riku_fighter
         {
             
             KeyboardHandler(); // Handle keyboard input
-            if (day / 50 == 1 ) {
-                simulator.RunSimulator();
-                List<Person> list = simulator.GetBabiesThisRound();
-                foreach (var item in list)
+            if (gameStarted)
+            {
+                if (day / 50 == 1)
                 {
-                    Debug.WriteLine(item.FirstName + " new babies");
-                    SpriteClass i;
-                    i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
-                    players.Add(i);
-                }
-                simulator.deleteBabyList();
-
-                List<Person> deadList = simulator.GetDeadThisRound();
-                foreach (var deadPerson in deadList)
-                {
-                    Debug.WriteLine(deadPerson.FirstName + " DIED");
-                    SpriteClass i;
-                    i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), deadPerson);
-                    foreach (var livingPerson in players.ToList())
+                    Task simulate = new Task(simulator.RunSimulator);
+                    simulate.Start();
+                    List<Person> list = simulator.GetBabiesThisRound();
+                    foreach (var item in list)
                     {
-                        Person p = livingPerson.person;
-                        if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
-                        {
-                            Debug.WriteLine("OMG A MATCH " + deadPerson.FirstName + " is dead yo ");
-                            players.Remove(livingPerson);
-                        }
+                        Debug.WriteLine(item.FirstName + " new babies");
+                        SpriteClass i;
+                        i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
+                        players.Add(i);
                     }
-                        
-                    
+                    simulator.deleteBabyList();
+
+                    List<Person> deadList = simulator.GetDeadThisRound();
+                    foreach (var deadPerson in deadList)
+                    {
+                        Debug.WriteLine(deadPerson.FirstName + " DIED");
+                        SpriteClass i;
+                        i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), deadPerson);
+                        foreach (var livingPerson in players.ToList())
+                        {
+                            Person p = livingPerson.person;
+                            if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
+                            {
+                                Debug.WriteLine("OMG A MATCH " + deadPerson.FirstName + " is dead yo ");
+                                players.Remove(livingPerson);
+                            }
+                        }
+
+
+                    }
+                    simulator.deleteDeadList();
+                    simulator.GetDeadThisRound();
+                    day = 0;
                 }
-                simulator.deleteDeadList();
-                simulator.GetDeadThisRound();
-                day = 0;
             }
             // Stop all movement when the game ends
             //if (gameOver)
