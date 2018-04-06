@@ -133,6 +133,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\broccoli.png" />
+    <Content Include="Content\femaleLeft.png" />
+    <Content Include="Content\femaleRight.png" />
     <Content Include="Content\game-over.png" />
     <Content Include="Content\grass.png" />
     <Content Include="Content\ninja-cat-dino.png" />
