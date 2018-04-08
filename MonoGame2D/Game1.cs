@@ -13,9 +13,6 @@ namespace Riku_fighter
 {
     public class Game1 : Game
     {
-        // The ratio of the screen that is sky versus ground
-        const float SKYRATIO = 3f / 3.5f;
-
         private List<String> messages;
 
         GraphicsDeviceManager graphics;
@@ -25,14 +22,37 @@ namespace Riku_fighter
         float screenHeight;
 
         bool gameStarted;
-        bool gameOver;
 
-        Texture2D grass;
+        Texture2D background;
         Texture2D startGameSplash;
-        Texture2D gameOverTexture;
+
+        Texture2D femaleRight;
+        Texture2D femaleLeft;
+
+        Texture2D NegFR;
+        Texture2D NegFL;
+
+        Texture2D MongFR;
+        Texture2D MongFL;
+
+        Texture2D AusFR;
+        Texture2D AusFL;
+
+        Texture2D NegMR;
+        Texture2D NegML;
+
+        Texture2D MongMR;
+        Texture2D MongML;
+
+        Texture2D AusMR;
+        Texture2D AusML;
+
+        Texture2D playerForward;
+        Texture2D playerLeft;
+
         Texture2D ghost;
 
-        List<SpriteClass> players;
+        List<Sprite> players;
 
         Random random;
 
@@ -41,7 +61,7 @@ namespace Riku_fighter
         SpriteFont consoleFont;
 
         SimulatorFacade simulator;
-        int day = 0;
+        int year = 0;
 
         public Game1()
         {
@@ -64,13 +84,12 @@ namespace Riku_fighter
             screenWidth = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Width);
 
             gameStarted = false;
-            gameOver = false;
 
             random = new Random();
 
             this.IsMouseVisible = true; // Hide the mouse within the app window
             graphics.IsFullScreen = true;
-            players = new List<SpriteClass>();
+            players = new List<Sprite>();
         }
 
 
@@ -81,9 +100,32 @@ namespace Riku_fighter
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Load textures
-            grass = Content.Load<Texture2D>("grass");
+            background = Content.Load<Texture2D>("grass");
             startGameSplash = Content.Load<Texture2D>("start-splash");
-            gameOverTexture = Content.Load<Texture2D>("game-over");
+
+            femaleRight = Content.Load<Texture2D>("femaleRight");
+            femaleLeft = Content.Load<Texture2D>("femaleLeft");
+
+            NegFR = Content.Load<Texture2D>("NegFR");
+            NegFL = Content.Load<Texture2D>("NegFL");
+
+            MongFR = Content.Load<Texture2D>("MongFR");
+            MongFL = Content.Load<Texture2D>("MongFL");
+
+            AusFR = Content.Load<Texture2D>("AusFR");
+            AusFL = Content.Load<Texture2D>("AusFL");
+
+            NegMR = Content.Load<Texture2D>("NegMR");
+            NegML = Content.Load<Texture2D>("NegML");
+
+            MongMR = Content.Load<Texture2D>("MongMR");
+            MongML = Content.Load<Texture2D>("MongML");
+
+            AusMR = Content.Load<Texture2D>("AusMR");
+            AusML = Content.Load<Texture2D>("AusML");
+
+            playerForward = Content.Load<Texture2D>("playerForward");
+            playerLeft = Content.Load<Texture2D>("playerLeft");
 
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
@@ -105,16 +147,17 @@ namespace Riku_fighter
             KeyboardHandler(); // Handle keyboard input
             if (gameStarted)
             {
-                if (day / 50 == 1)
+                if (year / 50 == 1)
                 {
                     Task simulate = new Task(simulator.RunSimulator);
                     simulate.Start();
                     List<Person> list = simulator.GetBabiesThisRound();
                     foreach (var item in list.ToList())
                     {
+                        List<Texture2D> spriteSheets = calculateCorrectSpriteSheet(item);
                         addConsoleMessage(item.FirstName + " was born");
-                        SpriteClass i;
-                        i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
+                        Sprite i;
+                        i = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
                         players.Add(i);
                     }
                     simulator.DeleteBabyList();
@@ -122,16 +165,13 @@ namespace Riku_fighter
                     List<Person> deadList = simulator.GetDeadThisRound();
                     foreach (var deadPerson in deadList.ToList())
                     {
-                        SpriteClass i;
-                        i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), deadPerson);
                         foreach (var livingPerson in players.ToList())
                         {
                             Person p = livingPerson.person;
                             if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
                             {
                                 addConsoleMessage(deadPerson.FirstName + " is no longer with us.");
-                                // players.Remove(livingPerson);
-                                livingPerson.texture = ghost;
+                                livingPerson.currentSpriteSheet = ghost;
                                 livingPerson.xSpeed = 0;
                                 livingPerson.dX = 0;
                                 livingPerson.gravitySpeed = -20f;
@@ -147,22 +187,14 @@ namespace Riku_fighter
                     }
                     simulator.DeleteDeadList();
                     simulator.GetDeadThisRound();
-                    day = 0;
-                }
-            }
-
-            if (gameStarted)
-            {
-                if (day / 50 == 1)
-                {
-                    simulator.RunSimulator();
-                    day = 0;
+                    year = 0;
                 }
                 foreach (var person in players)
                 {
                     person.Update(gameTime);
                 }
-                day++;
+                year++;
+                
             }
 
             // Update animated SpriteClass objects based on their current rates of change
@@ -189,12 +221,6 @@ namespace Riku_fighter
 
             spriteBatch.Begin(); // Begin drawing
 
-            if (gameOver)
-            {
-                // Draw game over texture
-                spriteBatch.Draw(gameOverTexture, new Vector2(screenWidth / 2 - gameOverTexture.Width / 2, screenHeight / 4 - gameOverTexture.Width / 2), Color.White);
-            }
-
             if (!gameStarted)
             {
                 // Fill the screen with black before the game starts
@@ -214,7 +240,7 @@ namespace Riku_fighter
             if (gameStarted)
             {
                 // Draw grass
-                spriteBatch.Draw(grass, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
+                spriteBatch.Draw(background, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
             
                 // Draw the players with the SpriteClass method
                 foreach (var person in players)
@@ -240,8 +266,9 @@ namespace Riku_fighter
                 {
                     Vector2 consoleSize = consoleFont.MeasureString(message);
                     spriteBatch.DrawString(consoleFont, message, new Vector2(screenWidth - consoleSize.X, messageY), Color.White);
-                    messageY = messageY + 18;
+                    messageY = messageY + 19;
                 }
+
             }
             // Draw the text horizontally centered
 
@@ -260,16 +287,76 @@ namespace Riku_fighter
 
         private async Task initialSpawn()
         {
+            setSpriteSheets();
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
+        }
+        private void setSpriteSheets()
+        {
+            var spriteSheets = new List<Texture2D>();
             foreach (var human in simulator.AliveHumans)
             {
-                Debug.WriteLine("-CREATION OF MANKIND-");
-                SpriteClass i;
-                i = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), human);
+                spriteSheets = calculateCorrectSpriteSheet(human);
+                Sprite i;
+                i = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), human);
                 players.Add(i);
             }
-            await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
+        private List<Texture2D> calculateCorrectSpriteSheet(Person person)
+        {
+            List<Texture2D> result = new List<Texture2D>();
+            if (person.Gender == Gender.Genders.female)
+            {
+                if (person.Race.GetType() == typeof(Race.Caucasoid))
+                {
+                    result.Add(femaleLeft);
+                    result.Add(femaleRight);
+
+                }
+                else if (person.Race.GetType() == typeof(Race.Negroid))
+                {
+                    result.Add(NegFL);
+                    result.Add(NegFR);
+                }
+                else if (person.Race.GetType() == typeof(Race.Mongoloid))
+                {
+                    result.Add(MongFL);
+                    result.Add(MongFR);
+                }
+                else
+                {
+                    result.Add(AusFL);
+                    result.Add(AusFR);
+                }
+            }
+
+            else
+            {
+                if (person.Race.GetType() == typeof(Race.Caucasoid))
+                {
+                    result.Add(playerLeft);
+                    result.Add(playerForward);
+                }
+                else if (person.Race.GetType() == typeof(Race.Negroid))
+                {
+                    result.Add(NegML);
+                    result.Add(NegMR);
+                }
+                else if (person.Race.GetType() == typeof(Race.Mongoloid))
+                {
+                    result.Add(MongML);
+                    result.Add(MongMR);
+                }
+                else
+                {
+                    result.Add(AusML);
+                    result.Add(AusMR);
+                }
+            }
+            return result;
+        }
+            
         // Start a new game, either when the app starts up or after game over
         public async void StartGame()
         {
@@ -292,61 +379,8 @@ namespace Riku_fighter
                 {
                     StartGame();
                     gameStarted = true;
-                    gameOver = false;
                 }
                 return;
-            }
-
-            // Restart the game if Enter is pressed
-            if (gameOver)
-            {
-                if (state.IsKeyDown(Keys.Enter))
-                {
-                    StartGame();
-                    gameOver = false;
-                }
-            }
-
-            foreach (var person in players)
-            {
-                if(person.person.Gender == Gender.Genders.female)
-                {
-                    if(person.person.Race.GetType() == typeof(Race.Caucasoid))
-                    {
-                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("femaleRight"), Content.Load<Texture2D>("femaleLeft"));
-                    }
-                    else if(person.person.Race.GetType() == typeof(Race.Negroid))
-                    {
-                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("NegFR"), Content.Load<Texture2D>("NegFL"));
-                    }
-                    else if(person.person.Race.GetType() == typeof(Race.Mongoloid))
-                    {
-                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("MongFR"), Content.Load<Texture2D>("MongFL"));
-                    }
-                    else
-                    {
-                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("AusFR"), Content.Load<Texture2D>("AusFL"));
-                    }
-                }
-                else
-                {
-                    if (person.person.Race.GetType() == typeof(Race.Caucasoid))
-                    {
-                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
-                    }
-                    else if (person.person.Race.GetType() == typeof(Race.Negroid))
-                    {
-                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("NegMR"), Content.Load<Texture2D>("NegML"));
-                    }
-                    else if (person.person.Race.GetType() == typeof(Race.Mongoloid))
-                    {
-                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("MongMR"), Content.Load<Texture2D>("MongML"));
-                    }
-                    else
-                    {
-                        person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("AusMR"), Content.Load<Texture2D>("AusML"));
-                    }
-                }
             }
         }
     }

@@ -116,7 +116,7 @@
     <Compile Include="Race\Negroid.cs" />
     <Compile Include="SimulatorFacade.cs" />
     <Compile Include="SimulatorStatistics.cs" />
-    <Compile Include="SpriteClass.cs" />
+    <Compile Include="Sprite.cs" />
     <Compile Include="State\Alive.cs" />
     <Compile Include="State\Deceased.cs" />
     <Compile Include="State\Healthy.cs" />

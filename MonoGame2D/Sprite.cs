@@ -8,10 +8,8 @@ using Windows.UI.ViewManagement;
 
 namespace Riku_fighter
 {
-    public class SpriteClass
+    public class Sprite
     {
-        const float HITBOXSCALE = .5f; // experiment with this value to make the collision detection more or less forgiving
-
         private int rows;
         private int columns;
         private float size;
@@ -24,13 +22,22 @@ namespace Riku_fighter
         public float xSpeed;
         public float yJump;
         public float gravitySpeed;
+        private float screenHeight;
+        private float screenWidth;
+        private const float SKYRATIO = 3f / 3.5f;
 
-        //public String checkPerson()
-        //{
+        public Texture2D currentSpriteSheet
+        {
+            get;
+            set;
+        }
 
-        //}
-        // sprite texture
-        public Texture2D texture
+        public Texture2D leftSpriteSheet
+        {
+            get;
+            set;
+        }
+        public Texture2D rightSpriteSheet
         {
             get;
             set;
@@ -86,10 +93,10 @@ namespace Riku_fighter
         }
 
         // Constructor
-        public SpriteClass(Texture2D texture, Vector2 position, int size, int rows, int columns, float scale, Person person)
+        public Sprite(Texture2D leftSpriteSheet, Texture2D rightSpriteSheet, Vector2 position, int size, int rows, int columns, float scale, Person person)
         {
             this.size = size;
-            this.texture = texture;
+            currentSpriteSheet = leftSpriteSheet;
             this.rows = rows;
             this.columns = columns;
             this.position = position;
@@ -107,9 +114,12 @@ namespace Riku_fighter
             yJump = ScaleToHighDPI(-1200f);
             gravitySpeed = ScaleToHighDPI(50f);
 
-            // Load the specified texture
-            //var stream = TitleContainer.OpenStream(textureName);
-            //texture = Texture2D.FromStream(graphicsDevice, stream);
+            screenHeight = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Height);
+            screenWidth = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Width);
+
+            this.leftSpriteSheet = leftSpriteSheet;
+            this.rightSpriteSheet = rightSpriteSheet;
+
         } 
 
         public float ScaleToHighDPI(float f)
@@ -125,7 +135,6 @@ namespace Riku_fighter
             this.x += this.dX * gameTime.ElapsedGameTime.Milliseconds /1000;
             this.y += this.dY * gameTime.ElapsedGameTime.Milliseconds /1000;
             this.angle += this.dA * gameTime.ElapsedGameTime.Seconds;
-            //Debug.WriteLine(gameTime);
 
             timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
             if (timeSinceLastFrame > millisecondsPerFrame)
@@ -139,13 +148,14 @@ namespace Riku_fighter
                     currentFrame = 0;
                 }
             }
+            Move();
         }
 
         // Draw the sprite with the given SpriteBatch
         public void Draw(SpriteBatch spriteBatch)
         {
-            int width = texture.Width / columns;
-            int height = texture.Height / rows;
+            int width = currentSpriteSheet.Width / columns;
+            int height = currentSpriteSheet.Height / rows;
             int row = (int)((float)currentFrame / columns);
             int column = currentFrame % columns;
             int widthSize = width * (int)size;
@@ -154,20 +164,10 @@ namespace Riku_fighter
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
             Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, width * (int)size, height * (int)size);
             Vector2 spritePosition = new Vector2(this.x, this.y);
-            spriteBatch.Draw(texture, spritePosition, sourceRectangle, Color.White, this.angle, new Vector2(54, texture.Height / 2), new Vector2(scale, scale), SpriteEffects.None, 0f);
+            spriteBatch.Draw(currentSpriteSheet, spritePosition, sourceRectangle, Color.White, this.angle, new Vector2(54, currentSpriteSheet.Height / 2), new Vector2(scale, scale), SpriteEffects.None, 0f);
          }
 
-        // Detect collision between two rectangular sprites
-        public bool RectangleCollision(SpriteClass otherSprite)
-        {
-            if (this.x + this.texture.Width * this.scale * HITBOXSCALE / 2 < otherSprite.x - otherSprite.texture.Width * otherSprite.scale / 2) return false;
-            if (this.y + this.texture.Height * this.scale * HITBOXSCALE / 2 < otherSprite.y - otherSprite.texture.Height * otherSprite.scale / 2) return false;
-            if (this.x - this.texture.Width * this.scale * HITBOXSCALE / 2 > otherSprite.x + otherSprite.texture.Width * otherSprite.scale / 2) return false;
-            if (this.y - this.texture.Height * this.scale * HITBOXSCALE / 2 > otherSprite.y + otherSprite.texture.Height * otherSprite.scale / 2) return false;
-            return true;
-        }
-
-        public void keyHandler(KeyboardState state, float SKYRATIO, float screenHeight, float screenWidth, Texture2D right, Texture2D left)
+        private void Move()
         {
             // Set game floor
             if (y > screenHeight * SKYRATIO)
@@ -181,7 +181,7 @@ namespace Riku_fighter
             {
                 x = screenWidth;
                 dX = xSpeed * -1;
-                texture = left;
+                currentSpriteSheet = leftSpriteSheet;
             }
 
             // Set left edge
@@ -189,7 +189,7 @@ namespace Riku_fighter
             {
                 x = 80;
                 dX = xSpeed;
-                texture = right;
+                currentSpriteSheet = rightSpriteSheet;
             }
 
             // Accelerate the player downward each frame to simulate gravity.
