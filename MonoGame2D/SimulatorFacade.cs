@@ -25,15 +25,10 @@ namespace Riku_fighter
         private static readonly double RELIGION_PROB = 0.9;
 
         public List<Person> Humanity = new List<Person>();
-        public List<Person> TempHumanity = new List<Person>();
         public List<Person> TempDeadPeople = new List<Person>();
         public List<Person> AliveHumans = new List<Person>();
         public List<Person> DeadHumans = new List<Person>();
-        public List<Person> HumanitySprites = new List<Person>(); 
-        public List<Person> TempBabySprites = new List<Person>();
-        public List<Person> TempDeadSprites = new List<Person>();
-        public List<Person> AliveSprites = new List<Person>();
-        public List<Person> DeadSprites = new List<Person>();
+        public List<Person> TempBaby = new List<Person>();
 
         public SimulatorFacade()
         {
@@ -210,34 +205,24 @@ namespace Riku_fighter
             AliveHumans.Add(Priscilla);
             AliveHumans.Add(Mable);
             AliveHumans.Add(John);
-
-            //AliveSprites.Add(SpriteAdam);
-            //AliveSprites.Add(SpriteMadison);
-            //AliveSprites.Add(SpriteJacob);
-            //AliveSprites.Add(SpriteEve);
-            //AliveSprites.Add(SpriteJames);
-            //AliveSprites.Add(SpriteLaura);
-            //AliveSprites.Add(SpriteGottard);
-            //AliveSprites.Add(SpriteGwynevere);
-
         }
              
         public List<Person> GetBabiesThisRound()
         {
-            List<Person> babies = TempBabySprites;
+            List<Person> babies = TempBaby;
             return babies;
         }
 
-        public void deleteBabyList()
+        public void DeleteBabyList()
         {
-            TempBabySprites.Clear();
+            TempBaby.Clear();
         }
         public List<Person> GetDeadThisRound()
         {
             List<Person> dead = TempDeadPeople;
             return dead;
         }
-        public void deleteDeadList()
+        public void DeleteDeadList()
         {
             TempDeadPeople.Clear();
         }
@@ -247,7 +232,7 @@ namespace Riku_fighter
             CurrentDate = CurrentDate.AddYears(1);
             List<Person> population = new List<Person>();
 
-            foreach (var sprite in AliveHumans)
+            foreach (var sprite in AliveHumans.ToList())
             {
                 int age = sprite.GetAge(CurrentDate);
                 var dieProb = new Probability().GetRandomDouble();
@@ -255,6 +240,7 @@ namespace Riku_fighter
                 //Console.WriteLine("Die Probability: " + dieProb + "-- Accident Probability: " + accProb);
                 if (dieProb > sprite.GetDieProb() && sprite.Mother != null && sprite.Father != null || accProb > ACCIDENT_PROB && sprite.Mother != null && sprite.Father != null)
                 {
+                    Debug.WriteLine(sprite.FirstName + " " + sprite.LastName + " is Dead!!!");
                     sprite.State = new Deceased(CurrentDate);
                 }
 
@@ -305,7 +291,7 @@ namespace Riku_fighter
                                     String Mname = MaleNames[maleNameProb.rInt];
                                     Person Child = sprite.MakeBaby(CurrentDate, Mname, Fname);
                                     Person Baby = Child;
-                                    TempBabySprites.Add(Baby);
+                                    TempBaby.Add(Baby);
                                 }
                             }
                         }                        
@@ -358,22 +344,24 @@ namespace Riku_fighter
                     }
                 }
                 population.Add(sprite);
-                if(sprite.State.GetType() == typeof(Deceased))
-                {
-                    TempDeadPeople.Add(sprite);
-                    DeadHumans.Add(sprite);
-                }
             }
-            foreach(var deadHuman in TempDeadPeople)
+            //LINQ
+            var deadHumanQuery = from humans in AliveHumans where humans.State.CurrStatus == null select humans;
+
+            var aliveHumanQuery = from humans in AliveHumans where humans.State.CurrStatus != null select humans;
+            //Humanity.Add((Person)from humans in AliveHumans where humans.State == typeof(Alive) select humans);
+            //Humanity.Add((Person)from humans in AliveHumans where humans.State == typeof(Deceased) select humans);
+            foreach (var deadHuman in deadHumanQuery.ToList())
             {
                 AliveHumans.Remove(deadHuman);
+                DeadHumans.Add(deadHuman);
+                TempDeadPeople.Add(deadHuman);
             }
-            foreach (var temphuman in TempBabySprites)
+            foreach (var temphuman in TempBaby.ToList())
             {
                 population.Add(temphuman);
                 AliveHumans.Add(temphuman);
             }
-            HumanitySprites = AliveHumans.Concat(DeadSprites).ToList();
         }
 
         public SimulatorStatistics getSimulatorStatistics()
