@@ -21,17 +21,11 @@ namespace Riku_fighter
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        int score = 0;
-
         float screenWidth;
         float screenHeight;
 
-        bool spaceDown;
         bool gameStarted;
         bool gameOver;
-
-        private string bornMessage = "";
-        private string deathMessage = "";
 
         Texture2D grass;
         Texture2D startGameSplash;
@@ -39,8 +33,6 @@ namespace Riku_fighter
         Texture2D ghost;
 
         List<SpriteClass> players;
-        SpriteClass player1;
-        SpriteClass player2;
 
         Random random;
 
@@ -57,7 +49,6 @@ namespace Riku_fighter
             Content.RootDirectory = "Content";  // Set the directory where game assets can be found by the ContentManager
         }
 
-
         // Give variables their initial states
         // Called once when the app is started
         protected override void Initialize()
@@ -72,18 +63,14 @@ namespace Riku_fighter
             screenHeight = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Height);
             screenWidth = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Width);
 
-            spaceDown = false;
             gameStarted = false;
             gameOver = false;
 
             random = new Random();
 
-            score = 0;
-
             this.IsMouseVisible = true; // Hide the mouse within the app window
             graphics.IsFullScreen = true;
             players = new List<SpriteClass>();
-
         }
 
 
@@ -97,10 +84,6 @@ namespace Riku_fighter
             grass = Content.Load<Texture2D>("grass");
             startGameSplash = Content.Load<Texture2D>("start-splash");
             gameOverTexture = Content.Load<Texture2D>("game-over");
-
-            // Construct SpriteClass objects
-            //player1 = new SpriteClass(Content.Load<Texture2D>("playerForward"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f));
-            //player2 = new SpriteClass(Content.Load<Texture2D>("playerLeft"), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f));
 
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
@@ -116,11 +99,9 @@ namespace Riku_fighter
         {
         }
 
-
         // Updates the logic of the game state each frame, checking for collision, gathering input, etc.
         protected override void Update(GameTime gameTime)
         {
-            
             KeyboardHandler(); // Handle keyboard input
             if (gameStarted)
             {
@@ -149,8 +130,7 @@ namespace Riku_fighter
                             if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
                             {
                                 addConsoleMessage(deadPerson.FirstName + " is no longer with us.");
-                                players.Remove(livingPerson);
-                                deathMessage = deadPerson.FirstName + " is no longer with us.";
+                                // players.Remove(livingPerson);
                                 livingPerson.texture = ghost;
                                 livingPerson.xSpeed = 0;
                                 livingPerson.dX = 0;
@@ -160,43 +140,29 @@ namespace Riku_fighter
                                 //TODO ACTUALLY KILL PEOPLE!
                             }
                         }
-
-
                     }
                     simulator.deleteDeadList();
                     simulator.GetDeadThisRound();
                     day = 0;
                 }
             }
-            // Stop all movement when the game ends
-            //if (gameOver)
-            //{
-            //    player1.dX = 0;
-            //    player1.dY = 0;
 
-            //    player2.dX = 0;
-            //    player2.dY = 0;
-            //}
             if (gameStarted)
             {
                 if (day / 50 == 1)
                 {
                     simulator.RunSimulator();
                     day = 0;
-                    Debug.WriteLine(simulator.getCurrentDate());
                 }
                 foreach (var person in players)
                 {
                     person.Update(gameTime);
                 }
-                
-                //player2.Update(gameTime);
                 day++;
             }
 
             // Update animated SpriteClass objects based on their current rates of change
             base.Update(gameTime);
-
         }
 
         public void addConsoleMessage(String message)
@@ -223,14 +189,6 @@ namespace Riku_fighter
             {
                 // Draw game over texture
                 spriteBatch.Draw(gameOverTexture, new Vector2(screenWidth / 2 - gameOverTexture.Width / 2, screenHeight / 4 - gameOverTexture.Width / 2), Color.White);
-
-                String pressEnter = "Press Enter to restart!";
-
-                // Measure the size of text in the given font
-                Vector2 pressEnterSize = stateFont.MeasureString(pressEnter);
-
-                // Draw the text horizontally centered
-                spriteBatch.DrawString(stateFont, pressEnter, new Vector2(screenWidth / 2 - pressEnterSize.X / 2, screenHeight - 200), Color.White);
             }
 
             if (!gameStarted)
@@ -259,8 +217,6 @@ namespace Riku_fighter
                 {
                     person.Draw(spriteBatch);
                 }
-                //player1.Draw(spriteBatch);
-                //player2.Draw(spriteBatch);
 
                 // draw year
                 String year = "Current year: "+simulator.getCurrentDate();
@@ -278,23 +234,12 @@ namespace Riku_fighter
                 int messageY = 0;
                 foreach (var message in messages)
                 {
-                   
-                    spriteBatch.DrawString(consoleFont, message, new Vector2(0, messageY), Color.White);
+                    Vector2 consoleSize = consoleFont.MeasureString(message);
+                    spriteBatch.DrawString(consoleFont, message, new Vector2(screenWidth - consoleSize.X, messageY), Color.White);
                     messageY = messageY + 18;
-
                 }
-                //Vector2 bornMessageVector = stateFont.MeasureString(bornMessage);
-                //spriteBatch.DrawString(stateFont, bornMessage, new Vector2(screenWidth / 3 - bornMessageVector.X / 1, screenHeight - 700), Color.White);
-
-                //Vector2 deathMessageVector = stateFont.MeasureString(deathMessage);
-                //spriteBatch.DrawString(stateFont, deathMessage, new Vector2(screenWidth / 2 - deathMessageVector.X / 6, screenHeight - 700), Color.White);
-
-
             }
-
-
             // Draw the text horizontally centered
-
 
             spriteBatch.End(); // Stop drawing
 
@@ -325,8 +270,6 @@ namespace Riku_fighter
         public async void StartGame()
         {
             await initialSpawn();
-
-            score = 0; // Reset score
         }
 
         // Handle user input from the keyboard
@@ -345,7 +288,6 @@ namespace Riku_fighter
                 {
                     StartGame();
                     gameStarted = true;
-                    spaceDown = true;
                     gameOver = false;
                 }
                 return;
@@ -370,12 +312,8 @@ namespace Riku_fighter
                 else
                 {
                     person.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
-                }
-                
+                }                
             }
-
-            //player1.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
-            //player2.keyHandler(state, SKYRATIO, screenHeight, screenWidth, Content.Load<Texture2D>("playerForward"), Content.Load<Texture2D>("playerLeft"));
         }
     }
 }
