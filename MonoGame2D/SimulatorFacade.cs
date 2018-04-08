@@ -237,10 +237,8 @@ namespace Riku_fighter
                 int age = sprite.GetAge(CurrentDate);
                 var dieProb = new Probability().GetRandomDouble();
                 var accProb = new Probability().GetRandomDouble();
-                //Console.WriteLine("Die Probability: " + dieProb + "-- Accident Probability: " + accProb);
                 if (dieProb > sprite.GetDieProb() && sprite.Mother != null && sprite.Father != null || accProb > ACCIDENT_PROB && sprite.Mother != null && sprite.Father != null)
                 {
-                    Debug.WriteLine(sprite.FirstName + " " + sprite.LastName + " is Dead!!!");
                     sprite.State = new Deceased(CurrentDate);
                 }
 

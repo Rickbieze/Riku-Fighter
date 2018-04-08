@@ -13,6 +13,8 @@ namespace Riku_fighter
 {
     public class Game1 : Game
     {
+        public enum GameStates { playing, idle, paused }
+
         private List<String> messages;
 
         GraphicsDeviceManager graphics;
@@ -23,8 +25,11 @@ namespace Riku_fighter
 
         bool gameStarted;
 
+        GameStates currentGameState;
+
         Texture2D background;
         Texture2D startGameSplash;
+        Texture2D pauseBackGround;
 
         Texture2D femaleRight;
         Texture2D femaleLeft;
@@ -62,6 +67,7 @@ namespace Riku_fighter
 
         SimulatorFacade simulator;
         int year = 0;
+        int selectedPersonIndex = 0;
 
         public Game1()
         {
@@ -75,6 +81,8 @@ namespace Riku_fighter
         {
             messages = new List<string>();
             simulator = new SimulatorFacade();
+            currentGameState = GameStates.idle;
+
             base.Initialize();
 
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize; // Attempt to launch in fullscreen mode
@@ -102,6 +110,7 @@ namespace Riku_fighter
             // Load textures
             background = Content.Load<Texture2D>("grass");
             startGameSplash = Content.Load<Texture2D>("start-splash");
+            pauseBackGround = Content.Load<Texture2D>("pausebg");
 
             femaleRight = Content.Load<Texture2D>("femaleRight");
             femaleLeft = Content.Load<Texture2D>("femaleLeft");
@@ -145,60 +154,69 @@ namespace Riku_fighter
         protected override void Update(GameTime gameTime)
         {
             KeyboardHandler(); // Handle keyboard input
-            if (gameStarted)
+            // currentGameState = gameState.getCurrentState();
+            if (currentGameState == GameStates.playing)
             {
-                if (year / 50 == 1)
-                {
-                    Task simulate = new Task(simulator.RunSimulator);
-                    simulate.Start();
-                    List<Person> list = simulator.GetBabiesThisRound();
-                    foreach (var item in list.ToList())
-                    {
-                        List<Texture2D> spriteSheets = calculateCorrectSpriteSheet(item);
-                        addConsoleMessage(item.FirstName + " was born");
-                        Sprite i;
-                        i = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
-                        players.Add(i);
-                    }
-                    simulator.DeleteBabyList();
-
-                    List<Person> deadList = simulator.GetDeadThisRound();
-                    foreach (var deadPerson in deadList.ToList())
-                    {
-                        foreach (var livingPerson in players.ToList())
-                        {
-                            Person p = livingPerson.person;
-                            if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
-                            {
-                                addConsoleMessage(deadPerson.FirstName + " is no longer with us.");
-                                livingPerson.currentSpriteSheet = ghost;
-                                livingPerson.xSpeed = 0;
-                                livingPerson.dX = 0;
-                                livingPerson.gravitySpeed = -20f;
-                                killPerson();
-
-                                async Task killPerson()
-                                {
-                                    await Task.Delay(2000);
-                                    players.Remove(livingPerson);
-                                }
-                            }
-                        }
-                    }
-                    simulator.DeleteDeadList();
-                    simulator.GetDeadThisRound();
-                    year = 0;
-                }
+                simulate();
                 foreach (var person in players)
                 {
                     person.Update(gameTime);
                 }
-                year++;
-                
+            }
+            if (currentGameState == GameStates.paused)
+            {
+                Debug.WriteLine("paused.");
             }
 
             // Update animated SpriteClass objects based on their current rates of change
             base.Update(gameTime);
+        }
+
+        private void simulate()
+        {
+            if (year / 50 == 1)
+            {
+                Task simulate = new Task(simulator.RunSimulator);
+                simulate.Start();
+                List<Person> list = simulator.GetBabiesThisRound();
+                foreach (var item in list.ToList())
+                {
+                    List<Texture2D> spriteSheets = calculateCorrectSpriteSheet(item);
+                    addConsoleMessage(item.FirstName + " was born");
+                    Sprite i;
+                    i = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
+                    players.Add(i);
+                }
+                simulator.DeleteBabyList();
+
+                List<Person> deadList = simulator.GetDeadThisRound();
+                foreach (var deadPerson in deadList.ToList())
+                {
+                    foreach (var livingPerson in players.ToList())
+                    {
+                        Person p = livingPerson.person;
+                        if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
+                        {
+                            addConsoleMessage(deadPerson.FirstName + " is no longer with us.");
+                            livingPerson.currentSpriteSheet = ghost;
+                            livingPerson.xSpeed = 0;
+                            livingPerson.dX = 0;
+                            livingPerson.gravitySpeed = -20f;
+                            killPerson();
+
+                            async Task killPerson()
+                            {
+                                await Task.Delay(2000);
+                                players.Remove(livingPerson);
+                            }
+                        }
+                    }
+                }
+                simulator.DeleteDeadList();
+                simulator.GetDeadThisRound();
+                year = 0;
+            }
+            year++;
         }
 
         public void addConsoleMessage(String message)
@@ -221,7 +239,7 @@ namespace Riku_fighter
 
             spriteBatch.Begin(); // Begin drawing
 
-            if (!gameStarted)
+            if (currentGameState == GameStates.idle)
             {
                 // Fill the screen with black before the game starts
                 spriteBatch.Draw(startGameSplash, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
@@ -237,9 +255,9 @@ namespace Riku_fighter
                 spriteBatch.DrawString(stateFont, title, new Vector2(screenWidth / 2 - titleSize.X / 2, screenHeight / 3), Color.ForestGreen);
                 spriteBatch.DrawString(stateFont, pressSpace, new Vector2(screenWidth / 2 - pressSpaceSize.X / 2, screenHeight / 2), Color.White);
             }
-            if (gameStarted)
+            if (currentGameState == GameStates.playing)
             {
-                // Draw grass
+                // Draw background
                 spriteBatch.Draw(background, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
             
                 // Draw the players with the SpriteClass method
@@ -252,7 +270,6 @@ namespace Riku_fighter
                 String year = "Current year: "+simulator.getCurrentDate();
                 Vector2 yearSize = stateFont.MeasureString(year);
                 spriteBatch.DrawString(stateFont, year, new Vector2(screenWidth / 2 - yearSize.X / 2, screenHeight - 800), Color.White);
-
 
                 // draw stats
                 SimulatorStatistics stats = simulator.getSimulatorStatistics();
@@ -270,11 +287,46 @@ namespace Riku_fighter
                 }
 
             }
-            // Draw the text horizontally centered
+            
+            if(currentGameState == GameStates.paused)
+            {
+                int initialY = 500;
+                var screenCenter = new Vector2(screenWidth / 2, screenHeight / 2);
+                var textureCenter = new Vector2(pauseBackGround.Width / 2, pauseBackGround.Height / 2);
+                spriteBatch.Draw(pauseBackGround, screenCenter, null, Color.White, 0f, textureCenter, 1f, SpriteEffects.None, 1f);
+                List<String> details = getPersonDetailString(players[selectedPersonIndex].person);
+                Debug.WriteLine(screenHeight / 2);
+                foreach (var item in details)
+                {
+                    String detail = item;
+                    Vector2 consoleSize = consoleFont.MeasureString(detail);
+                    spriteBatch.DrawString(consoleFont, detail, new Vector2(screenWidth / 2 - consoleSize.X / 2, initialY), Color.White);
+                    initialY = initialY + 19;
+
+                }
+                
+
+
+                // spriteBatch.DrawString(stateFont, title, new Vector2(screenWidth / 2 - titleSize.X / 2, screenHeight / 3), Color.ForestGreen);
+
+            }
 
             spriteBatch.End(); // Stop drawing
 
             base.Draw(gameTime);
+        }
+
+        private List<String> getPersonDetailString(Person person)
+        {
+
+            List<String> details = new List<string>();
+
+            details.Add("Name: " + person.FirstName + " " + person.LastName);
+            details.Add("Birthday: " + person.Birthdate.ToString() + " (age: " + person.Age + ")");
+            details.Add("Gender: " + person.Gender.ToString());
+            details.Add("Father: " + person.Father.FirstName + " " + person.Father.LastName);
+
+            return details;
         }
 
         // Scale a number of pixels so that it displays properly on a High-DPI screen, such as a Surface Pro or Studio
@@ -297,9 +349,9 @@ namespace Riku_fighter
             foreach (var human in simulator.AliveHumans)
             {
                 spriteSheets = calculateCorrectSpriteSheet(human);
-                Sprite i;
-                i = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), human);
-                players.Add(i);
+                Sprite person;
+                person = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), human);
+                players.Add(person);
             }
         }
 
@@ -373,15 +425,37 @@ namespace Riku_fighter
 
             // Start the game if Space is pressed.
             // Exit the keyboard handler method early, preventing the dino from jumping on the same keypress.
-            if (!gameStarted)
+            if (currentGameState == GameStates.idle)
             {
                 if (state.IsKeyDown(Keys.Space))
                 {
                     StartGame();
-                    gameStarted = true;
+                    currentGameState = GameStates.playing;
                 }
                 return;
             }
+
+            if (currentGameState == GameStates.playing)
+            {
+                if (state.IsKeyDown(Keys.Tab))
+                {
+                    currentGameState = GameStates.paused;
+
+                }
+                return;
+            }
+            if(currentGameState == GameStates.paused)
+            {
+                if (state.IsKeyDown(Keys.Enter))
+                {
+                    currentGameState = GameStates.playing;
+                }
+                if (state.IsKeyDown(Keys.Right))
+                {
+                    selectedPersonIndex = 1;
+                }
+            }
+
         }
     }
 }

@@ -153,5 +153,23 @@ namespace Riku_fighter
                 return Child;
             }        
         }
+
+        public List<String> getPersonDetailList()
+        {
+            List<String> details = new List<String>();
+            details.Add(FirstName);
+            details.Add(LastName);
+            details.Add(Age.ToString());
+            details.Add(Father.FirstName + " " +  Father.LastName);
+            details.Add(Mother.FirstName + " " + Mother.LastName);
+            details.Add(Gender.ToString());
+            details.Add(Birthdate.ToString());
+            details.Add(State.ToString());
+            details.Add(Race.ToString());
+            details.Add(Partner.FirstName + " " + Partner.LastName);
+            details.Add(Religion.ToString());
+            return details;
+
+        }
     }
 }
