@@ -1,4 +1,5 @@
 ﻿using Riku_fighter.Race;
+using Riku_fighter.State;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -151,7 +152,25 @@ namespace Riku_fighter
             {
                 Child = null;
                 return Child;
-            }        
+            }    
+            
+        }
+        public String getCurrentState()
+        {
+            String status = "";
+            if(State.GetType() == typeof(Healthy))
+            {
+                status = "Healthy";
+            }
+            if(State.GetType() == typeof(Deceased))
+            {
+                status = "Dead";
+            }
+            if(State.GetType() == typeof(Sick))
+            {
+                status = "Sick";
+            }
+            return status;
         }
     }
 }
