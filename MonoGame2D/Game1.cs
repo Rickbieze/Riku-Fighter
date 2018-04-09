@@ -67,7 +67,7 @@ namespace Riku_fighter
 
         SimulatorFacade simulator;
         int year = 0;
-        int selectedPersonIndex = 8;
+        int selectedPersonIndex = 0;
 
         public Game1()
         {
@@ -324,9 +324,12 @@ namespace Riku_fighter
             details.Add("Name: " + person.FirstName + " " + person.LastName);
             details.Add("Birthday: " + person.Birthdate.ToString() + " (age: " + person.Age + ") " + person.getCurrentState());
             details.Add("Gender: " + person.Gender.ToString());
-            details.Add("Race: " + person.Race.ToString());
-            details.Add("Father: " + person.Father.FirstName + " " + person.Father.LastName);
-            details.Add("Mother: " + person.Mother.FirstName + " " + person.Mother.LastName);
+            details.Add("Race: " + person.Race.Description);
+            if (person.Father != null || person.Mother != null)
+            {
+                details.Add("Father: " + person.Father.FirstName + " " + person.Father.LastName);
+                details.Add("Mother: " + person.Mother.FirstName + " " + person.Mother.LastName);
+            }
             if (person.Partner != null)
             {
                 details.Add("Partner: " + person.Partner.FirstName + " " + person.Partner.LastName);
@@ -477,23 +480,23 @@ namespace Riku_fighter
         }
         private void decrementSelectedPersonIndex()
         {
-            if(selectedPersonIndex > 8)
+            if(selectedPersonIndex > 0)
             {
                 selectedPersonIndex--;
             }
         }
         private void incrementSelectedPersonIndex()
         {
-            if (selectedPersonIndex < players.Count -1)
+            if (selectedPersonIndex < simulator.GetHumanity().Count -1)
             {
                 selectedPersonIndex++;
             }
         }
         private void checkSelectedIndex()
         {
-            if(selectedPersonIndex > players.Count - 1)
+            if(selectedPersonIndex > simulator.GetHumanity().Count - 1)
             {
-                selectedPersonIndex = players.Count - 1;
+                selectedPersonIndex = simulator.GetHumanity().Count - 1;
             }
         }
     }
