@@ -312,7 +312,7 @@ namespace Riku_fighter
                                 amountOfChildren = 0;
                             }
 
-                            if ((new Probability().babyRate() > (50 + AliveHumans.Count())) && AliveHumans.Count() < 50)
+                            if ((new Probability().babyRate() > (135 + AliveHumans.Count())) && AliveHumans.Count() < 50)
                             {
                                 Debug.WriteLine("BABY: " + sprite.Gender + " :: " + sprite.Partner.Gender + " " + amountOfChildren);
                                 if (sprite.GetAge(CurrentDate) > 18 && sprite.GetAge(CurrentDate) < 65 && amountOfChildren < 5 && sprite.Partner.Gender != sprite.Gender && sprite.Mother != null && sprite.Father != null && sprite.Partner.State.GetType() != typeof(Deceased))
