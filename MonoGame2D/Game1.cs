@@ -288,11 +288,11 @@ namespace Riku_fighter
             {
                 Person person = simulator.GetHumanity()[selectedPersonIndex];
                 List<Texture2D> spriteSheets = calculateCorrectSpriteSheet(person);
-                Sprite i;
+                Sprite sprite;
 
-                i = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), person);
-                i.x = screenWidth / 2 + 50;
-                i.y = screenHeight / 2 - 80;
+                sprite = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), person);
+                sprite.x = screenWidth / 2 + 50;
+                sprite.y = screenHeight / 2 - 80;
 
 
                 checkSelectedIndex();
@@ -311,7 +311,7 @@ namespace Riku_fighter
                     initialY = initialY + 19;
 
                 }
-                i.Draw(spriteBatch);
+                sprite.Draw(spriteBatch);
             }
             spriteBatch.End(); // Stop drawing
             base.Draw(gameTime);
