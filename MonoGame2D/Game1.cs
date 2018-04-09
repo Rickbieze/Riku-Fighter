@@ -109,7 +109,7 @@ namespace Riku_fighter
 
             // Load textures
             background = Content.Load<Texture2D>("grass");
-            startGameSplash = Content.Load<Texture2D>("start-splash");
+            startGameSplash = Content.Load<Texture2D>("StartScreen");
             pauseBackGround = Content.Load<Texture2D>("pausebg");
 
             femaleRight = Content.Load<Texture2D>("femaleRight");
