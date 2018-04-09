@@ -278,17 +278,17 @@ namespace Riku_fighter
             }
             if (currentGameState == GameStates.playing || currentGameState == GameStates.paused)
             {
-                if (year / 50 == 1)
+                if (this.year / 50 == 1)
                 {
                     // Draw background
-                    if (backgroundCount <= 12)
+                    if (backgroundCount < 12)
                     {
                         spriteBatch.Draw(background[backgroundCount], new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
                         backgroundCount++;
                     }
                     else
                     {
-                        backgroundCount = 0;
+                        backgroundCount = 1;
                     }
                 }
                 // Draw the players with the SpriteClass method
