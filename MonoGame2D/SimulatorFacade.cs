@@ -18,7 +18,7 @@ namespace Riku_fighter
         public DateTime CurrentDate = DateTime.Now;
         private static readonly double ACCIDENT_PROB = 0.99;
 
-        private static readonly double PARTNER_PROB = 0.55;
+        private static readonly double PARTNER_PROB = 0.7;
         private static readonly double BREAKUP_PROB = 0.99;
         private static readonly double PREGNANT_PROB = 0.8;
 
@@ -295,18 +295,24 @@ namespace Riku_fighter
 
                         if (sprite.Partner != null)
                         {
-                            int amountOfChildren = 0;
-                            if ((sprite.Partner.Children != null) && (!sprite.Partner.Children.Any()))
+                            int amountOfChildren;
+                            if (sprite.Partner.Children != null)
                             {
-                                amountOfChildren = sprite.Partner.Children.Count;
+                                amountOfChildren = sprite.Children.Count;
                                 //attempts to get children by the couples
                                 //Debug.WriteLine(sprite.FirstName + " :: " + sprite.Partner.FirstName + " " +  amountOfChildren);
                             }
-                            //todo: probability
-                            if ((new Probability().babyRate() > (40 + (AliveHumans.Count() * 1.5))) && AliveHumans.Count() < 50)
+                            else
                             {
-                                if (sprite.GetAge(CurrentDate) > 18 && sprite.GetAge(CurrentDate) < 65 && amountOfChildren < 3 && sprite.Partner.Gender != sprite.Gender && sprite.Mother != null && sprite.Father != null && sprite.Partner.State.GetType() != typeof(Deceased))
+                                amountOfChildren = 0;
+                            }
+
+                            if ((new Probability().babyRate() > (50 + AliveHumans.Count())) && AliveHumans.Count() < 50)
+                            {
+                                Debug.WriteLine("BABY: " + sprite.Gender + " :: " + sprite.Partner.Gender + " " + amountOfChildren);
+                                if (sprite.GetAge(CurrentDate) > 18 && sprite.GetAge(CurrentDate) < 65 && amountOfChildren < 5 && sprite.Partner.Gender != sprite.Gender && sprite.Mother != null && sprite.Father != null && sprite.Partner.State.GetType() != typeof(Deceased))
                                 {
+                                    Debug.WriteLine("SUCCESS");
                                     //Needs to add child name and random gender
                                     Probability femaleNameProb = new Probability(FemaleNames.Count);
                                     Probability maleNameProb = new Probability(MaleNames.Count);
@@ -334,8 +340,23 @@ namespace Riku_fighter
                                     {
                                         if (newpartner != sprite && ageDifference < 15 && newpartner.Partner == null)
                                         {
-                                            newpartner.Partner = sprite;
-                                            sprite.Partner = newpartner;
+                                            Random random = new Random();
+                                            int rnd = random.Next(0, 100);
+
+                                            if(newpartner.Gender == sprite.Gender)
+                                            {
+                                                if(rnd >= 80)
+                                                {
+                                                    newpartner.Partner = sprite;
+                                                    sprite.Partner = newpartner;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                newpartner.Partner = sprite;
+                                                sprite.Partner = newpartner;
+                                            }
+
                                         }
                                     }
                                 }                                
