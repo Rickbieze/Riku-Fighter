@@ -18,7 +18,7 @@ namespace Riku_fighter
         public DateTime CurrentDate = DateTime.Now;
         private static readonly double ACCIDENT_PROB = 0.99;
 
-        private static readonly double PARTNER_PROB = 0.7;
+        private static readonly double PARTNER_PROB = 0.55;
         private static readonly double BREAKUP_PROB = 0.99;
         private static readonly double PREGNANT_PROB = 0.8;
 
@@ -294,12 +294,19 @@ namespace Riku_fighter
                             sprite.Partner = null;
                         }
 
-                        if(sprite.Partner != null)
+                        if (sprite.Partner != null)
                         {
-                            //todo: probability
-                            if (new Probability().GetRandomDouble() < PREGNANT_PROB && AliveHumans.Count() < 50)
+                            int amountOfChildren = 0;
+                            if ((sprite.Partner.Children != null) && (!sprite.Partner.Children.Any()))
                             {
-                                if (sprite.GetAge(CurrentDate) > 18 && sprite.Partner.Gender != sprite.Gender && sprite.Mother != null && sprite.Father != null && sprite.Partner.State.GetType() != typeof(Deceased))
+                                amountOfChildren = sprite.Partner.Children.Count;
+                                //attempts to get children by the couples
+                                //Debug.WriteLine(sprite.FirstName + " :: " + sprite.Partner.FirstName + " " +  amountOfChildren);
+                            }
+                            //todo: probability
+                            if ((new Probability().babyRate() > (40 + (AliveHumans.Count() * 1.5))) && AliveHumans.Count() < 50)
+                            {
+                                if (sprite.GetAge(CurrentDate) > 18 && sprite.GetAge(CurrentDate) < 65 && amountOfChildren < 3 && sprite.Partner.Gender != sprite.Gender && sprite.Mother != null && sprite.Father != null && sprite.Partner.State.GetType() != typeof(Deceased))
                                 {
                                     //Needs to add child name and random gender
                                     Probability femaleNameProb = new Probability(FemaleNames.Count);

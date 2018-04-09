@@ -31,5 +31,12 @@ namespace Riku_fighter
             rInt = random.Next(100, 450);
             return rInt;
         }
+
+        public int babyRate()
+        {
+            Random random = new Random(Guid.NewGuid().GetHashCode());
+            rInt = random.Next(1, 200);
+            return rInt;
+        }
     }
 }
