@@ -100,7 +100,8 @@ namespace Riku_fighter
             }
 
             if (Gender != Partner.Gender)
-            {     
+            {
+                
                 Probability getGender = new Probability(2);
                 if (getGender.rInt == 0)
                 {
@@ -147,6 +148,12 @@ namespace Riku_fighter
                 }
                 return Child;
             }
+            else
+            {
+                Child = null;
+                return Child;
+            }    
+            
         }
         public String getCurrentState()
         {
