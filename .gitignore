@@ -974,3 +974,14 @@ monodroid*.msi
 /CompiledContent/Windows/IgnoreMe.dll
 *.cachefile
 *.dll
+MonoGame2D/obj/x86/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+MonoGame2D/obj/x86/Debug/Riku_fighter.csproj.CoreCompileInputs.cache
+.vs/Riku_fighter/v15/.suo
+.vs/Riku_fighter/v15/Server/sqlite3/storage.ide
+MonoGame2D/obj/x86/Debug/Riku_fighter.csproj.CoreCompileInputs.cache
+.vs/Riku_fighter/v15/.suo
+.vs/Riku_fighter/v15/Server/sqlite3/storage.ide
+MonoGame2D/bin/WindowsUniversal/x86/Debug/AppX/vs.appxrecipe
+MonoGame2D/Content/obj/WindowsStoreApp/grass.mgcontent
+MonoGame2D/Content/obj/WindowsStoreApp/player.mgcontent
+MonoGame2D/Content/obj/WindowsStoreApp/test.mgcontent

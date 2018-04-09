@@ -2,42 +2,76 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Media;
 
 namespace Riku_fighter
 {
     public class Game1 : Game
     {
-        // The ratio of the screen that is sky versus ground
-        const float SKYRATIO = 2f / 3f;
+        public enum GameStates { playing, idle, paused }
+
+        private List<String> messages;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        int score = 0;
-
         float screenWidth;
         float screenHeight;
-        float dinoSpeedX;
-        float dinoJumpY;
-        float gravitySpeed;
 
-        bool spaceDown;
         bool gameStarted;
-        bool gameOver;
 
-        Texture2D grass;
+        int backgroundCount = 0;
+
+        GameStates currentGameState;
+
+        List<Texture2D> background;
+        Texture2D bg;
         Texture2D startGameSplash;
-        Texture2D gameOverTexture;
+        Texture2D pauseBackGround;
 
-        SpriteClass dino;
-        
+        Texture2D femaleRight;
+        Texture2D femaleLeft;
+
+        Texture2D NegFR;
+        Texture2D NegFL;
+
+        Texture2D MongFR;
+        Texture2D MongFL;
+
+        Texture2D AusFR;
+        Texture2D AusFL;
+
+        Texture2D NegMR;
+        Texture2D NegML;
+
+        Texture2D MongMR;
+        Texture2D MongML;
+
+        Texture2D AusMR;
+        Texture2D AusML;
+
+        Texture2D playerForward;
+        Texture2D playerLeft;
+
+        Texture2D ghost;
+
+        List<Sprite> players;
+
         Random random;
 
         SpriteFont scoreFont;
         SpriteFont stateFont;
+        SpriteFont consoleFont;
 
+        SimulatorFacade simulator;
+        int year = 0;
+        int selectedPersonIndex = 0;
 
         public Game1()
         {
@@ -45,32 +79,29 @@ namespace Riku_fighter
             Content.RootDirectory = "Content";  // Set the directory where game assets can be found by the ContentManager
         }
 
-
         // Give variables their initial states
         // Called once when the app is started
         protected override void Initialize()
         {
+            messages = new List<string>();
+            simulator = new SimulatorFacade();
+            currentGameState = GameStates.idle;
+
             base.Initialize();
 
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen; // Attempt to launch in fullscreen mode
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize; // Attempt to launch in fullscreen mode
 
             // Get screen height and width, scaling them up if running on a high-DPI monitor.
             screenHeight = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Height);
             screenWidth = ScaleToHighDPI((float)ApplicationView.GetForCurrentView().VisibleBounds.Width);
 
-            spaceDown = false;
             gameStarted = false;
-            gameOver = false;
 
             random = new Random();
 
-            dinoSpeedX = ScaleToHighDPI(1000f);
-            dinoJumpY = ScaleToHighDPI(-1200f);
-            gravitySpeed = ScaleToHighDPI(30f);
-            score = 0;
-
-            this.IsMouseVisible = false; // Hide the mouse within the app window
-
+            this.IsMouseVisible = true; // Hide the mouse within the app window
+            graphics.IsFullScreen = true;
+            players = new List<Sprite>();
         }
 
 
@@ -80,17 +111,57 @@ namespace Riku_fighter
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Load textures
-            grass = Content.Load<Texture2D>("grass");
-            startGameSplash = Content.Load<Texture2D>("start-splash");
-            gameOverTexture = Content.Load<Texture2D>("game-over");
+            background = new List<Texture2D>();
 
-            // Construct SpriteClass objects
-            dino = new SpriteClass(GraphicsDevice, "Content/ninja-cat-dino.png", ScaleToHighDPI(1f));
+            int i = 1;
+            while (i <= 12)
+            {
+                Texture2D backGround = Content.Load<Texture2D>("Background/" + i);
+                Debug.WriteLine(i);
+                background.Add(backGround);
+                i++;
+            }
+
+            bg = background[0];
+
+            //Load Music
+            Song song = Content.Load<Song>("Music/Undertale OST - Ruins Extended");
+            MediaPlayer.Play(song);
+            // Load textures
+
+            startGameSplash = Content.Load<Texture2D>("StartScreen");
+            pauseBackGround = Content.Load<Texture2D>("pausebg");
+
+            femaleRight = Content.Load<Texture2D>("femaleRight");
+            femaleLeft = Content.Load<Texture2D>("femaleLeft");
+
+            NegFR = Content.Load<Texture2D>("NegFR");
+            NegFL = Content.Load<Texture2D>("NegFL");
+
+            MongFR = Content.Load<Texture2D>("MongFR");
+            MongFL = Content.Load<Texture2D>("MongFL");
+
+            AusFR = Content.Load<Texture2D>("AusFR");
+            AusFL = Content.Load<Texture2D>("AusFL");
+
+            NegMR = Content.Load<Texture2D>("NegMR");
+            NegML = Content.Load<Texture2D>("NegML");
+
+            MongMR = Content.Load<Texture2D>("MongMR");
+            MongML = Content.Load<Texture2D>("MongML");
+
+            AusMR = Content.Load<Texture2D>("AusMR");
+            AusML = Content.Load<Texture2D>("AusML");
+
+            playerForward = Content.Load<Texture2D>("playerForward");
+            playerLeft = Content.Load<Texture2D>("playerLeft");
 
             // Load fonts
             scoreFont = Content.Load<SpriteFont>("Score");
             stateFont = Content.Load<SpriteFont>("GameState");
+            consoleFont = Content.Load<SpriteFont>("File");
+
+            ghost = Content.Load<Texture2D>("Ghost");
         }
 
 
@@ -99,49 +170,82 @@ namespace Riku_fighter
         {
         }
 
-
         // Updates the logic of the game state each frame, checking for collision, gathering input, etc.
         protected override void Update(GameTime gameTime)
         {
-            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds; // Get time elapsed since last Update iteration
-
             KeyboardHandler(); // Handle keyboard input
-
-            // Stop all movement when the game ends
-            if (gameOver)
+            // currentGameState = gameState.getCurrentState();
+            if (currentGameState == GameStates.playing)
             {
-                dino.dX = 0;
-                dino.dY = 0;
+                simulate();
+                foreach (var person in players)
+                {
+                    person.Update(gameTime);
+                }
             }
 
             // Update animated SpriteClass objects based on their current rates of change
-            dino.Update(elapsedTime);
-
-            // Accelerate the dino downward each frame to simulate gravity.
-            dino.dY += gravitySpeed;
-
-            // Set game floor
-            if (dino.y > screenHeight * SKYRATIO)
-            {
-                dino.dY = 0;
-                dino.y = screenHeight * SKYRATIO;
-            }
-
-            // Set right edge
-            if (dino.x > screenWidth - dino.texture.Width / 2)
-            {
-                dino.x = screenWidth - dino.texture.Width / 2;
-                dino.dX = 0;
-            }
-
-            // Set left edge
-            if (dino.x < 0 + dino.texture.Width / 2)
-            {
-                dino.x = 0 + dino.texture.Width / 2;
-                dino.dX = 0;
-            }
-
             base.Update(gameTime);
+        }
+
+        private void simulate()
+        {
+            if (year / 50 == 1)
+            {
+                Task simulate = new Task(simulator.RunSimulator);
+                simulate.Start();
+                List<Person> list = simulator.GetBabiesThisRound();
+                foreach (var item in list.ToList())
+                {
+                    List<Texture2D> spriteSheets = calculateCorrectSpriteSheet(item);
+                    addConsoleMessage(item.FirstName + " was born");
+                    Sprite i;
+                    i = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), item);
+                    players.Add(i);
+                }
+                simulator.DeleteBabyList();
+
+                List<Person> deadList = simulator.GetDeadThisRound();
+                foreach (var deadPerson in deadList.ToList())
+                {
+                    foreach (var livingPerson in players.ToList())
+                    {
+                        Person p = livingPerson.person;
+                        if (p.FirstName == deadPerson.FirstName && p.LastName == deadPerson.LastName && p.Birthdate == deadPerson.Birthdate)
+                        {
+                            addConsoleMessage(deadPerson.FirstName + " is no longer with us.");
+                            livingPerson.currentSpriteSheet = ghost;
+                            livingPerson.xSpeed = 0;
+                            livingPerson.dX = 0;
+                            livingPerson.gravitySpeed = -20f;
+                            killPerson();
+
+                            async Task killPerson()
+                            {
+                                await Task.Delay(2000);
+                                players.Remove(livingPerson);
+                            }
+                        }
+                    }
+                }
+                simulator.DeleteDeadList();
+                simulator.GetDeadThisRound();
+                year = 0;
+            }
+            year++;
+        }
+
+        public void addConsoleMessage(String message)
+        {
+            if (messages.Count > 20)
+            {
+                messages.RemoveAt(0);
+                messages.Add(message);
+            }
+            else
+            {
+                messages.Add(message);
+            }
         }
 
 
@@ -152,39 +256,13 @@ namespace Riku_fighter
 
             spriteBatch.Begin(); // Begin drawing
 
-            // Draw grass
-            spriteBatch.Draw(grass, new Rectangle(0, (int)(screenHeight * SKYRATIO), (int)screenWidth, (int)screenHeight), Color.White);
-
-            if (gameOver)
-            {
-                // Draw game over texture
-                spriteBatch.Draw(gameOverTexture, new Vector2(screenWidth / 2 - gameOverTexture.Width / 2, screenHeight / 4 - gameOverTexture.Width / 2), Color.White);
-
-                String pressEnter = "Press Enter to restart!";
-
-                // Measure the size of text in the given font
-                Vector2 pressEnterSize = stateFont.MeasureString(pressEnter);
-
-                // Draw the text horizontally centered
-                spriteBatch.DrawString(stateFont, pressEnter, new Vector2(screenWidth / 2 - pressEnterSize.X / 2, screenHeight - 200), Color.White);
-
-                // If the game is over, draw the score in red
-                spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth - 100, 50), Color.Red);
-            }
-
-            // If the game is not over, draw it in black
-            else spriteBatch.DrawString(scoreFont, score.ToString(), new Vector2(screenWidth - 100, 50), Color.Black);
-
-            // Draw broccoli and dino with the SpriteClass method
-            dino.Draw(spriteBatch);
-
-            if (!gameStarted)
+            if (currentGameState == GameStates.idle)
             {
                 // Fill the screen with black before the game starts
                 spriteBatch.Draw(startGameSplash, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
 
-                String title = "Riku Fighter";
-                String pressSpace = "Press Space to start";
+                String title = "Life Simulator";
+                String pressSpace = "Press Space to start the simulation";
 
                 // Measure the size of text in the given font
                 Vector2 titleSize = stateFont.MeasureString(title);
@@ -194,12 +272,113 @@ namespace Riku_fighter
                 spriteBatch.DrawString(stateFont, title, new Vector2(screenWidth / 2 - titleSize.X / 2, screenHeight / 3), Color.ForestGreen);
                 spriteBatch.DrawString(stateFont, pressSpace, new Vector2(screenWidth / 2 - pressSpaceSize.X / 2, screenHeight / 2), Color.White);
             }
+            if (currentGameState == GameStates.playing || currentGameState == GameStates.paused)
+            {
+                if (this.year / 50 == 1)
+                {
+                    // Draw background
+                    if (backgroundCount < 12)
+                    {
+                        bg = background[backgroundCount];
+                        backgroundCount++;
+                    }
+                    else
+                    {
+                        backgroundCount = 1;
+                    }
+                }
 
+                spriteBatch.Draw(bg, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
+
+                // Draw the players with the SpriteClass method
+                foreach (var person in players)
+                {
+                    person.Draw(spriteBatch);
+                }
+
+                // draw year
+                String year = "Current year: " + simulator.getCurrentDate();
+                Vector2 yearSize = stateFont.MeasureString(year);
+                spriteBatch.DrawString(stateFont, year, new Vector2(screenWidth / 2 - yearSize.X / 2, screenHeight - 800), Color.White);
+
+                // draw stats
+                SimulatorStatistics stats = simulator.getSimulatorStatistics();
+                String statistics = "Alive Humans: " + stats.getAlive().ToString() + " Dead Humans: " + stats.getDead().ToString();
+                Vector2 statsSize = stateFont.MeasureString(statistics);
+                spriteBatch.DrawString(stateFont, statistics, new Vector2(screenWidth / 2 - statsSize.X / 2, screenHeight - 900), Color.White);
+
+                // draw simulator message
+                int messageY = 0;
+                foreach (var message in messages)
+                {
+                    Vector2 consoleSize = consoleFont.MeasureString(message);
+                    spriteBatch.DrawString(consoleFont, message, new Vector2(screenWidth - consoleSize.X, messageY), Color.White);
+                    messageY = messageY + 19;
+                }
+
+            }
+
+            if (currentGameState == GameStates.paused)
+            {
+                Person person = simulator.GetHumanity()[selectedPersonIndex];
+                List<Texture2D> spriteSheets = calculateCorrectSpriteSheet(person);
+                Sprite sprite;
+
+                sprite = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), person);
+                sprite.x = screenWidth / 2 + 50;
+                sprite.y = screenHeight / 2 - 80;
+
+
+                checkSelectedIndex();
+                int initialY = 500;
+                var screenCenter = new Vector2(screenWidth / 2, screenHeight / 2);
+                var textureCenter = new Vector2(pauseBackGround.Width / 2, pauseBackGround.Height / 2);
+                spriteBatch.Draw(pauseBackGround, screenCenter, null, Color.White, 0f, textureCenter, 1f, SpriteEffects.None, 1f);
+                List<String> details = getPersonDetailString(simulator.GetHumanity()[selectedPersonIndex]);
+                Person p = simulator.GetHumanity()[selectedPersonIndex];
+                
+                foreach (var item in details)
+                {
+                    String detail = item;
+                    Vector2 consoleSize = consoleFont.MeasureString(detail);
+                    spriteBatch.DrawString(consoleFont, detail, new Vector2(screenWidth / 2 - consoleSize.X / 2, initialY), Color.White);
+                    initialY = initialY + 19;
+
+                }
+                sprite.Draw(spriteBatch);
+            }
             spriteBatch.End(); // Stop drawing
-
             base.Draw(gameTime);
         }
 
+        private List<String> getPersonDetailString(Person person)
+        {
+            List<String> details = new List<string>();
+
+            details.Add("Name: " + person.FirstName + " " + person.LastName);
+            details.Add("Birthday: " + person.Birthdate.ToString() + " (age: " + person.Age + ") " + person.getCurrentState());
+            details.Add("Gender: " + person.Gender.ToString());
+            details.Add("Race: " + person.Race.Description);
+            if (person.Father != null || person.Mother != null)
+            {
+                details.Add("Father: " + person.Father.FirstName + " " + person.Father.LastName);
+                details.Add("Mother: " + person.Mother.FirstName + " " + person.Mother.LastName);
+            }
+            if (person.Partner != null)
+            {
+                details.Add("Partner: " + person.Partner.FirstName + " " + person.Partner.LastName);
+            }
+            if (person.Children.Count > 0)
+            {
+                details.Add("Children: ");
+                foreach (var child in person.Children)
+                {
+                    details.Add(child.FirstName + " " + child.LastName);
+                }
+            }
+            details.Add("Religion: " + person.Religion);
+            return details;
+        }
 
         // Scale a number of pixels so that it displays properly on a High-DPI screen, such as a Surface Pro or Studio
         public float ScaleToHighDPI(float f)
@@ -209,67 +388,150 @@ namespace Riku_fighter
             return f;
         }
 
-
-
-
-
-        // Start a new game, either when the app starts up or after game over
-        public void StartGame()
+        private async Task initialSpawn()
         {
-            // Reset dino position
-            dino.x = screenWidth / 2;
-            dino.y = screenHeight * SKYRATIO;
+            setSpriteSheets();
+            await Task.Delay(TimeSpan.FromSeconds(1));
 
-            score = 0; // Reset score
+        }
+        private void setSpriteSheets()
+        {
+            var spriteSheets = new List<Texture2D>();
+            foreach (var human in simulator.AliveHumans)
+            {
+                spriteSheets = calculateCorrectSpriteSheet(human);
+                Sprite person;
+                person = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), human);
+                players.Add(person);
+            }
         }
 
+        private List<Texture2D> calculateCorrectSpriteSheet(Person person)
+        {
+            List<Texture2D> result = new List<Texture2D>();
+            if (person.Gender == Gender.Genders.female)
+            {
+                if (person.Race.GetType() == typeof(Race.Caucasoid))
+                {
+                    result.Add(femaleLeft);
+                    result.Add(femaleRight);
+                }
+                else if (person.Race.GetType() == typeof(Race.Negroid))
+                {
+                    result.Add(NegFL);
+                    result.Add(NegFR);
+                }
+                else if (person.Race.GetType() == typeof(Race.Mongoloid))
+                {
+                    result.Add(MongFL);
+                    result.Add(MongFR);
+                }
+                else
+                {
+                    result.Add(AusFL);
+                    result.Add(AusFR);
+                }
+            }
 
+            else
+            {
+                if (person.Race.GetType() == typeof(Race.Caucasoid))
+                {
+                    result.Add(playerLeft);
+                    result.Add(playerForward);
+                }
+                else if (person.Race.GetType() == typeof(Race.Negroid))
+                {
+                    result.Add(NegML);
+                    result.Add(NegMR);
+                }
+                else if (person.Race.GetType() == typeof(Race.Mongoloid))
+                {
+                    result.Add(MongML);
+                    result.Add(MongMR);
+                }
+                else
+                {
+                    result.Add(AusML);
+                    result.Add(AusMR);
+                }
+            }
+            return result;
+        }
+
+        // Start a new game, either when the app starts up or after game over
+        public async void StartGame()
+        {
+            await initialSpawn();
+        }
+
+        KeyboardState oldState;
         // Handle user input from the keyboard
-        void KeyboardHandler()
+        public void KeyboardHandler()
         {
             KeyboardState state = Keyboard.GetState();
-            
+
             // Quit the game if Escape is pressed.
             if (state.IsKeyDown(Keys.Escape)) Exit();
 
             // Start the game if Space is pressed.
             // Exit the keyboard handler method early, preventing the dino from jumping on the same keypress.
-            if (!gameStarted)
+            if (currentGameState == GameStates.idle)
             {
                 if (state.IsKeyDown(Keys.Space))
                 {
                     StartGame();
-                    gameStarted = true;
-                    spaceDown = true;
-                    gameOver = false;
+                    currentGameState = GameStates.playing;
                 }
                 return;
             }
 
-            // Restart the game if Enter is pressed
-            if (gameOver)
+            if (currentGameState == GameStates.playing)
+            {
+                if (state.IsKeyDown(Keys.Tab) && !oldState.IsKeyDown(Keys.Tab))
+                {
+                    currentGameState = GameStates.paused;
+                }
+                return;
+            }
+            if (currentGameState == GameStates.paused)
             {
                 if (state.IsKeyDown(Keys.Enter))
                 {
-                    StartGame();
-                    gameOver = false;
+                    currentGameState = GameStates.playing;
                 }
-            }
+                if (state.IsKeyDown(Keys.Right) && !oldState.IsKeyDown(Keys.Right))
+                {
+                    incrementSelectedPersonIndex();
+                }
+                if (state.IsKeyDown(Keys.Left) && !oldState.IsKeyDown(Keys.Left))
+                {
+                    decrementSelectedPersonIndex();
+                }
 
-            // Jump if Space (or another jump key) is pressed
-            if (state.IsKeyDown(Keys.Space) || state.IsKeyDown(Keys.W) || state.IsKeyDown(Keys.Up))
+            }
+            oldState = state;
+        }
+        private void decrementSelectedPersonIndex()
+        {
+            if(selectedPersonIndex > 0)
             {
-                // Jump if Space is pressed but not held and the dino is on the floor
-                if (!spaceDown && dino.y >= screenHeight * SKYRATIO - 1) dino.dY = dinoJumpY;
-            
-                spaceDown = true;
+                selectedPersonIndex--;
             }
-            else spaceDown = false;
-
-            // Handle left and right
-            if (state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A)) dino.dX = dinoSpeedX * -1;
-            else if (state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D)) dino.dX = dinoSpeedX;
-            else dino.dX = 0;
+        }
+        private void incrementSelectedPersonIndex()
+        {
+            if (selectedPersonIndex < simulator.GetHumanity().Count -1)
+            {
+                selectedPersonIndex++;
+            }
+        }
+        private void checkSelectedIndex()
+        {
+            if(selectedPersonIndex > simulator.GetHumanity().Count - 1)
+            {
+                selectedPersonIndex = simulator.GetHumanity().Count - 1;
+            }
         }
     }
 }
