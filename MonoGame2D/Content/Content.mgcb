@@ -526,3 +526,9 @@
 /processorParam:TextureFormat=Color
 /build:StartScreen.png
 
+#begin Music/Undertale OST - Ruins Extended.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Undertale OST - Ruins Extended.mp3
+

@@ -8,6 +8,7 @@ using System.Linq;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Media;
 
 namespace Riku_fighter
 {
@@ -122,6 +123,10 @@ namespace Riku_fighter
             }
 
             bg = background[0];
+
+            //Load Music
+            Song song = Content.Load<Song>("Music/Undertale OST - Ruins Extended");
+            MediaPlayer.Play(song);
             // Load textures
 
             startGameSplash = Content.Load<Texture2D>("StartScreen");
