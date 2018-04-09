@@ -319,8 +319,11 @@ namespace Riku_fighter
                                     String Mname = MaleNames[maleNameProb.rInt];
                                     Person Child = sprite.MakeBaby(CurrentDate, Mname, Fname);
                                     Person Baby = Child;
-                                    TempBaby.Add(Baby);
-                                    Humanity.Add(Baby);
+                                    if(Baby != null)
+                                    {
+                                        TempBaby.Add(Baby);
+                                        Humanity.Add(Baby);
+                                    }
                                 }
                             }
                         }                        
