@@ -67,7 +67,7 @@ namespace Riku_fighter
 
         SimulatorFacade simulator;
         int year = 0;
-        int selectedPersonIndex = 0;
+        int selectedPersonIndex = 8;
 
         public Game1()
         {
@@ -255,7 +255,7 @@ namespace Riku_fighter
                 spriteBatch.DrawString(stateFont, title, new Vector2(screenWidth / 2 - titleSize.X / 2, screenHeight / 3), Color.ForestGreen);
                 spriteBatch.DrawString(stateFont, pressSpace, new Vector2(screenWidth / 2 - pressSpaceSize.X / 2, screenHeight / 2), Color.White);
             }
-            if (currentGameState == GameStates.playing)
+            if (currentGameState == GameStates.playing || currentGameState == GameStates.paused)
             {
                 // Draw background
                 spriteBatch.Draw(background, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
@@ -290,6 +290,7 @@ namespace Riku_fighter
             
             if(currentGameState == GameStates.paused)
             {
+                checkSelectedIndex();
                 int initialY = 500;
                 var screenCenter = new Vector2(screenWidth / 2, screenHeight / 2);
                 var textureCenter = new Vector2(pauseBackGround.Width / 2, pauseBackGround.Height / 2);
@@ -325,7 +326,16 @@ namespace Riku_fighter
             details.Add("Birthday: " + person.Birthdate.ToString() + " (age: " + person.Age + ")");
             details.Add("Gender: " + person.Gender.ToString());
             details.Add("Father: " + person.Father.FirstName + " " + person.Father.LastName);
-
+            details.Add("Mother: " + person.Mother.FirstName + " " + person.Mother.LastName);
+            if(person.Children.Count > 0)
+            {
+                details.Add("Children: " + person.Children.ElementAt(0).FirstName + " " + person.Children.ElementAt(0).LastName);
+                foreach (var child in person.Children)
+                {
+                    details.Add(child.FirstName + " " + child.LastName);
+                }
+            }
+            details.Add("Religion: " + person.Religion);
             return details;
         }
 
@@ -415,6 +425,7 @@ namespace Riku_fighter
             await initialSpawn();
         }
 
+        KeyboardState oldState;
         // Handle user input from the keyboard
         public void KeyboardHandler()
         {
@@ -437,7 +448,7 @@ namespace Riku_fighter
 
             if (currentGameState == GameStates.playing)
             {
-                if (state.IsKeyDown(Keys.Tab))
+                if (state.IsKeyDown(Keys.Tab) && !oldState.IsKeyDown(Keys.Tab))
                 {
                     currentGameState = GameStates.paused;
 
@@ -449,13 +460,39 @@ namespace Riku_fighter
                 if (state.IsKeyDown(Keys.Enter))
                 {
                     currentGameState = GameStates.playing;
-                }
-                if (state.IsKeyDown(Keys.Right))
+                }           
+                if (state.IsKeyDown(Keys.Right) && !oldState.IsKeyDown(Keys.Right))
                 {
-                    selectedPersonIndex = 1;
+                    incrementSelectedPersonIndex();
                 }
-            }
+                if (state.IsKeyDown(Keys.Left) && !oldState.IsKeyDown(Keys.Left))
+                {
+                    decrementSelectedPersonIndex();
+                }
 
+            }
+            oldState = state; 
+        }
+        private void decrementSelectedPersonIndex()
+        {
+            if(selectedPersonIndex > 8)
+            {
+                selectedPersonIndex--;
+            }
+        }
+        private void incrementSelectedPersonIndex()
+        {
+            if (selectedPersonIndex < players.Count -1)
+            {
+                selectedPersonIndex++;
+            }
+        }
+        private void checkSelectedIndex()
+        {
+            if(selectedPersonIndex > players.Count - 1)
+            {
+                selectedPersonIndex = players.Count - 1;
+            }
         }
     }
 }
