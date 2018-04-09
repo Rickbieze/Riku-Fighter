@@ -327,9 +327,13 @@ namespace Riku_fighter
             details.Add("Gender: " + person.Gender.ToString());
             details.Add("Father: " + person.Father.FirstName + " " + person.Father.LastName);
             details.Add("Mother: " + person.Mother.FirstName + " " + person.Mother.LastName);
+            if (person.Partner != null)
+            {
+                details.Add("Partner: " + person.Partner.FirstName + " " + person.Partner.LastName);
+            }
             if(person.Children.Count > 0)
             {
-                details.Add("Children: " + person.Children.ElementAt(0).FirstName + " " + person.Children.ElementAt(0).LastName);
+                details.Add("Children: ");
                 foreach (var child in person.Children)
                 {
                     details.Add(child.FirstName + " " + child.LastName);
@@ -451,7 +455,6 @@ namespace Riku_fighter
                 if (state.IsKeyDown(Keys.Tab) && !oldState.IsKeyDown(Keys.Tab))
                 {
                     currentGameState = GameStates.paused;
-
                 }
                 return;
             }
