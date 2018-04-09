@@ -25,9 +25,11 @@ namespace Riku_fighter
 
         bool gameStarted;
 
+        int backgroundCount = 0;
+
         GameStates currentGameState;
 
-        Texture2D background;
+        List<Texture2D> background;
         Texture2D startGameSplash;
         Texture2D pauseBackGround;
 
@@ -107,8 +109,30 @@ namespace Riku_fighter
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            background = new List<Texture2D>();
+
+            int i = 1;
+            while (i <= 12)
+            {
+                Texture2D bg = Content.Load<Texture2D>("Background/" + i);
+                Debug.WriteLine(i);
+                background.Add(bg);
+                i++;
+            }
             // Load textures
-            background = Content.Load<Texture2D>("grass");
+            //background.Add(Content.Load<Texture2D>("background/1"));
+            //background.Add(Content.Load<Texture2D>("background/2"));
+            //background.Add(Content.Load<Texture2D>("background/3"));
+            //background.Add(Content.Load<Texture2D>("background/4"));
+            //background.Add(Content.Load<Texture2D>("background/5"));
+            //background.Add(Content.Load<Texture2D>("background/6"));
+            //background.Add(Content.Load<Texture2D>("background/7"));
+            //background.Add(Content.Load<Texture2D>("background/8"));
+            //background.Add(Content.Load<Texture2D>("background/9"));
+            //background.Add(Content.Load<Texture2D>("background/10"));
+            //background.Add(Content.Load<Texture2D>("background/11"));
+            //background.Add(Content.Load<Texture2D>("background/12"));
+
             startGameSplash = Content.Load<Texture2D>("StartScreen");
             pauseBackGround = Content.Load<Texture2D>("pausebg");
 
@@ -217,12 +241,13 @@ namespace Riku_fighter
 
         public void addConsoleMessage(String message)
         {
-            if(messages.Count > 20)
+            if (messages.Count > 20)
             {
                 messages.RemoveAt(0);
                 messages.Add(message);
             }
-            else { 
+            else
+            {
                 messages.Add(message);
             }
         }
@@ -253,9 +278,19 @@ namespace Riku_fighter
             }
             if (currentGameState == GameStates.playing || currentGameState == GameStates.paused)
             {
-                // Draw background
-                spriteBatch.Draw(background, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
-            
+                if (year / 50 == 1)
+                {
+                    // Draw background
+                    if (backgroundCount <= 12)
+                    {
+                        spriteBatch.Draw(background[backgroundCount], new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
+                        backgroundCount++;
+                    }
+                    else
+                    {
+                        backgroundCount = 0;
+                    }
+                }
                 // Draw the players with the SpriteClass method
                 foreach (var person in players)
                 {
@@ -263,13 +298,13 @@ namespace Riku_fighter
                 }
 
                 // draw year
-                String year = "Current year: "+simulator.getCurrentDate();
+                String year = "Current year: " + simulator.getCurrentDate();
                 Vector2 yearSize = stateFont.MeasureString(year);
                 spriteBatch.DrawString(stateFont, year, new Vector2(screenWidth / 2 - yearSize.X / 2, screenHeight - 800), Color.White);
 
                 // draw stats
                 SimulatorStatistics stats = simulator.getSimulatorStatistics();
-                String statistics = "Alive Humans: "+ stats.getAlive().ToString() + " Dead Humans: "+stats.getDead().ToString();
+                String statistics = "Alive Humans: " + stats.getAlive().ToString() + " Dead Humans: " + stats.getDead().ToString();
                 Vector2 statsSize = stateFont.MeasureString(statistics);
                 spriteBatch.DrawString(stateFont, statistics, new Vector2(screenWidth / 2 - statsSize.X / 2, screenHeight - 900), Color.White);
 
@@ -283,16 +318,16 @@ namespace Riku_fighter
                 }
 
             }
-            
-            if(currentGameState == GameStates.paused)
+
+            if (currentGameState == GameStates.paused)
             {
                 Person person = simulator.GetHumanity()[selectedPersonIndex];
                 List<Texture2D> spriteSheets = calculateCorrectSpriteSheet(person);
-                Sprite i;
+                Sprite sprite;
 
-                i = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), person);
-                i.x = screenWidth / 2 + 50;
-                i.y = screenHeight / 2 - 80;
+                sprite = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), person);
+                sprite.x = screenWidth / 2 + 50;
+                sprite.y = screenHeight / 2 - 80;
 
 
                 checkSelectedIndex();
@@ -311,7 +346,7 @@ namespace Riku_fighter
                     initialY = initialY + 19;
 
                 }
-                i.Draw(spriteBatch);
+                sprite.Draw(spriteBatch);
             }
             spriteBatch.End(); // Stop drawing
             base.Draw(gameTime);
@@ -331,7 +366,7 @@ namespace Riku_fighter
             {
                 details.Add("Partner: " + person.Partner.FirstName + " " + person.Partner.LastName);
             }
-            if(person.Children.Count > 0)
+            if (person.Children.Count > 0)
             {
                 details.Add("Children: ");
                 foreach (var child in person.Children)
@@ -421,7 +456,7 @@ namespace Riku_fighter
             }
             return result;
         }
-            
+
         // Start a new game, either when the app starts up or after game over
         public async void StartGame()
         {
@@ -433,7 +468,7 @@ namespace Riku_fighter
         public void KeyboardHandler()
         {
             KeyboardState state = Keyboard.GetState();
-            
+
             // Quit the game if Escape is pressed.
             if (state.IsKeyDown(Keys.Escape)) Exit();
 
@@ -457,12 +492,12 @@ namespace Riku_fighter
                 }
                 return;
             }
-            if(currentGameState == GameStates.paused)
+            if (currentGameState == GameStates.paused)
             {
                 if (state.IsKeyDown(Keys.Enter))
                 {
                     currentGameState = GameStates.playing;
-                }           
+                }
                 if (state.IsKeyDown(Keys.Right) && !oldState.IsKeyDown(Keys.Right))
                 {
                     incrementSelectedPersonIndex();
@@ -473,25 +508,25 @@ namespace Riku_fighter
                 }
 
             }
-            oldState = state; 
+            oldState = state;
         }
         private void decrementSelectedPersonIndex()
         {
-            if(selectedPersonIndex > 8)
+            if (selectedPersonIndex > 8)
             {
                 selectedPersonIndex--;
             }
         }
         private void incrementSelectedPersonIndex()
         {
-            if (selectedPersonIndex < players.Count -1)
+            if (selectedPersonIndex < players.Count - 1)
             {
                 selectedPersonIndex++;
             }
         }
         private void checkSelectedIndex()
         {
-            if(selectedPersonIndex > players.Count - 1)
+            if (selectedPersonIndex > players.Count - 1)
             {
                 selectedPersonIndex = players.Count - 1;
             }
