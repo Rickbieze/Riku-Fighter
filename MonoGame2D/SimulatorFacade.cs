@@ -231,6 +231,11 @@ namespace Riku_fighter
             return babies;
         }
 
+        public List<Person> GetHumanity()
+        {
+            return Humanity;
+        }
+
         public void DeleteBabyList()
         {
             TempBaby.Clear();
@@ -321,6 +326,7 @@ namespace Riku_fighter
                                     Person Child = sprite.MakeBaby(CurrentDate, Mname, Fname);
                                     Person Baby = Child;
                                     TempBaby.Add(Baby);
+                                    Humanity.Add(Baby);
                                 }
                             }
                         }                        
