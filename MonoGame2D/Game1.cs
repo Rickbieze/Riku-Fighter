@@ -30,6 +30,7 @@ namespace Riku_fighter
         GameStates currentGameState;
 
         List<Texture2D> background;
+        Texture2D bg;
         Texture2D startGameSplash;
         Texture2D pauseBackGround;
 
@@ -114,24 +115,14 @@ namespace Riku_fighter
             int i = 1;
             while (i <= 12)
             {
-                Texture2D bg = Content.Load<Texture2D>("Background/" + i);
+                Texture2D backGround = Content.Load<Texture2D>("Background/" + i);
                 Debug.WriteLine(i);
-                background.Add(bg);
+                background.Add(backGround);
                 i++;
             }
+
+            bg = background[0];
             // Load textures
-            //background.Add(Content.Load<Texture2D>("background/1"));
-            //background.Add(Content.Load<Texture2D>("background/2"));
-            //background.Add(Content.Load<Texture2D>("background/3"));
-            //background.Add(Content.Load<Texture2D>("background/4"));
-            //background.Add(Content.Load<Texture2D>("background/5"));
-            //background.Add(Content.Load<Texture2D>("background/6"));
-            //background.Add(Content.Load<Texture2D>("background/7"));
-            //background.Add(Content.Load<Texture2D>("background/8"));
-            //background.Add(Content.Load<Texture2D>("background/9"));
-            //background.Add(Content.Load<Texture2D>("background/10"));
-            //background.Add(Content.Load<Texture2D>("background/11"));
-            //background.Add(Content.Load<Texture2D>("background/12"));
 
             startGameSplash = Content.Load<Texture2D>("StartScreen");
             pauseBackGround = Content.Load<Texture2D>("pausebg");
@@ -283,7 +274,7 @@ namespace Riku_fighter
                     // Draw background
                     if (backgroundCount < 12)
                     {
-                        spriteBatch.Draw(background[backgroundCount], new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
+                        bg = background[backgroundCount];
                         backgroundCount++;
                     }
                     else
@@ -291,6 +282,9 @@ namespace Riku_fighter
                         backgroundCount = 1;
                     }
                 }
+
+                spriteBatch.Draw(bg, new Rectangle(0, 0, (int)screenWidth, (int)screenHeight), Color.White);
+
                 // Draw the players with the SpriteClass method
                 foreach (var person in players)
                 {
