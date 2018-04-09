@@ -47,7 +47,8 @@ namespace Riku_fighter
                 Gender = Gender.Genders.male,
                 Birthdate = new DateTime(1994, 6, 3),
                 State = new Healthy(),
-                Race = new Mongoloid()
+                Race = new Mongoloid(),
+                Children = new List<Person>()
             };
 
             Negroid Saskia = new Negroid()
@@ -59,7 +60,8 @@ namespace Riku_fighter
                 Gender = Gender.Genders.female,
                 Birthdate = new DateTime(1994, 1, 17),
                 State = new Healthy(),
-                Race = new Negroid()
+                Race = new Negroid(),
+                Children = new List<Person>()
             };
 
             Caucasoid Marnix = new Caucasoid()
@@ -71,7 +73,8 @@ namespace Riku_fighter
                 Gender = Gender.Genders.male,
                 Birthdate = new DateTime(1996, 4, 23),
                 State = new Healthy(),
-                Race = new Caucasoid()
+                Race = new Caucasoid(),
+                Children = new List<Person>()
             };
 
             Australoid Scarlett = new Australoid()
@@ -83,7 +86,8 @@ namespace Riku_fighter
                 Gender = Gender.Genders.female,
                 Birthdate = new DateTime(1984, 11, 22),
                 State = new Healthy(),
-                Race = new Australoid()
+                Race = new Australoid(),
+                Children = new List<Person>()
             };
 
             Mongoloid Gwyn = new Mongoloid()
@@ -95,7 +99,8 @@ namespace Riku_fighter
                 Gender = Gender.Genders.male,
                 Birthdate = new DateTime(1994, 6, 3),
                 State = new Healthy(),
-                Race = new Mongoloid()
+                Race = new Mongoloid(),
+                Children = new List<Person>()
             };
 
             Negroid Priscilla = new Negroid()
@@ -107,7 +112,8 @@ namespace Riku_fighter
                 Gender = Gender.Genders.female,
                 Birthdate = new DateTime(1994, 10, 29),
                 State = new Healthy(),
-                Race = new Negroid()
+                Race = new Negroid(),
+                Children = new List<Person>()
             };
 
             Caucasoid John = new Caucasoid()
@@ -119,7 +125,8 @@ namespace Riku_fighter
                 Gender = Gender.Genders.male,
                 Birthdate = new DateTime(1995, 1, 12),
                 State = new Healthy(),
-                Race = new Caucasoid()
+                Race = new Caucasoid(),
+                Children = new List<Person>()
             };
 
             Australoid Mable = new Australoid()
@@ -131,7 +138,8 @@ namespace Riku_fighter
                 Gender = Gender.Genders.female,
                 Birthdate = new DateTime(1994, 6, 23),
                 State = new Healthy(),
-                Race = new Australoid()
+                Race = new Australoid(),
+                Children = new List<Person>()
             };
 
             Marnix.Partner = Scarlett;
@@ -155,16 +163,6 @@ namespace Riku_fighter
             Mongoloid Laura = new Mongoloid("Laura", John, Mable, Gender.Genders.female, DateTime.Now);
             Negroid Gottard = new Negroid("Gottard", John, Mable, Gender.Genders.male, DateTime.Now);
             Caucasoid Gwynevere = new Caucasoid("Gwynevere", Gwyn, Priscilla, Gender.Genders.female, DateTime.Now);
-
-            //Person SpriteAdam = new Person(Adam);
-            //Person SpriteMadison = new Person(Madison);
-            //Person SpriteJacob = new Person(Jacob);
-            //Person SpriteEve = new Person(Eve);
-            //Person SpriteJames = new Person(James);
-            //Person SpriteLaura = new Person(Laura);
-            //Person SpriteGottard = new Person(Gottard);
-            //Person SpriteGwynevere = new Person(Gwynevere);
-
 
             Adam.State = new Healthy();
             Madison.State = new Healthy();

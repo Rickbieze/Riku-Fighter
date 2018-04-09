@@ -152,6 +152,7 @@
     <Content Include="Content\NegMR.png" />
     <Content Include="Content\ninja-cat-dino.png" />
     <Content Include="Content\start-splash.png" />
+    <Content Include="Content\StartScreen.png" />
     <Content Include="FemaleNames.txt" />
     <Content Include="MaleNames.txt" />
     <Content Include="Properties\Default.rd.xml" />
