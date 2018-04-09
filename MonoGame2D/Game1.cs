@@ -163,10 +163,6 @@ namespace Riku_fighter
                     person.Update(gameTime);
                 }
             }
-            if (currentGameState == GameStates.paused)
-            {
-                Debug.WriteLine("paused.");
-            }
 
             // Update animated SpriteClass objects based on their current rates of change
             base.Update(gameTime);
@@ -296,7 +292,6 @@ namespace Riku_fighter
                 var textureCenter = new Vector2(pauseBackGround.Width / 2, pauseBackGround.Height / 2);
                 spriteBatch.Draw(pauseBackGround, screenCenter, null, Color.White, 0f, textureCenter, 1f, SpriteEffects.None, 1f);
                 List<String> details = getPersonDetailString(simulator.GetHumanity()[selectedPersonIndex]);
-                Debug.WriteLine(screenHeight / 2);
                 foreach (var item in details)
                 {
                     String detail = item;
@@ -305,21 +300,13 @@ namespace Riku_fighter
                     initialY = initialY + 19;
 
                 }
-                
-
-
-                // spriteBatch.DrawString(stateFont, title, new Vector2(screenWidth / 2 - titleSize.X / 2, screenHeight / 3), Color.ForestGreen);
-
             }
-
             spriteBatch.End(); // Stop drawing
-
             base.Draw(gameTime);
         }
 
         private List<String> getPersonDetailString(Person person)
         {
-
             List<String> details = new List<string>();
 
             details.Add("Name: " + person.FirstName + " " + person.LastName);
@@ -378,7 +365,6 @@ namespace Riku_fighter
                 {
                     result.Add(femaleLeft);
                     result.Add(femaleRight);
-
                 }
                 else if (person.Race.GetType() == typeof(Race.Negroid))
                 {
@@ -455,7 +441,6 @@ namespace Riku_fighter
                 if (state.IsKeyDown(Keys.Tab) && !oldState.IsKeyDown(Keys.Tab))
                 {
                     currentGameState = GameStates.paused;
-
                 }
                 return;
             }
