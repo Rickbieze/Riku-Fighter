@@ -162,7 +162,6 @@ namespace Riku_fighter
             int heightSize = height * (int)size;
 
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-            Rectangle destinationRectangle = new Rectangle((int)position.X, (int)position.Y, width * (int)size, height * (int)size);
             Vector2 spritePosition = new Vector2(this.x, this.y);
             spriteBatch.Draw(currentSpriteSheet, spritePosition, sourceRectangle, Color.White, this.angle, new Vector2(54, currentSpriteSheet.Height / 2), new Vector2(scale, scale), SpriteEffects.None, 0f);
          }

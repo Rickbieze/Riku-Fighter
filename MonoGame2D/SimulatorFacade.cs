@@ -160,9 +160,9 @@ namespace Riku_fighter
             Australoid Eve = new Australoid("Eve", Marnix, Scarlett, Gender.Genders.female, DateTime.Now);
 
             Australoid James = new Australoid("James", Gwyn, Priscilla, Gender.Genders.male, DateTime.Now);
-            Mongoloid Laura = new Mongoloid("Laura", John, Mable, Gender.Genders.female, DateTime.Now);
+            Caucasoid Laura = new Caucasoid("Laura", John, Mable, Gender.Genders.female, DateTime.Now);
             Negroid Gottard = new Negroid("Gottard", John, Mable, Gender.Genders.male, DateTime.Now);
-            Caucasoid Gwynevere = new Caucasoid("Gwynevere", Gwyn, Priscilla, Gender.Genders.female, DateTime.Now);
+            Mongoloid Gwynevere = new Mongoloid("Gwynevere", Gwyn, Priscilla, Gender.Genders.female, DateTime.Now);
 
             Adam.State = new Healthy();
             Madison.State = new Healthy();
@@ -312,7 +312,7 @@ namespace Riku_fighter
                                 amountOfChildren = 0;
                             }
 
-                            if ((new Probability().babyRate() > (50 + AliveHumans.Count())) && AliveHumans.Count() < 50)
+                            if ((new Probability().babyRate() > (135 + AliveHumans.Count())) && AliveHumans.Count() < 50)
                             {
                                 Debug.WriteLine("BABY: " + sprite.Gender + " :: " + sprite.Partner.Gender + " " + amountOfChildren);
                                 if (sprite.GetAge(CurrentDate) > 18 && sprite.GetAge(CurrentDate) < 65 && amountOfChildren < 5 && sprite.Partner.Gender != sprite.Gender && sprite.Mother != null && sprite.Father != null && sprite.Partner.State.GetType() != typeof(Deceased))

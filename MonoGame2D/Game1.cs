@@ -321,12 +321,23 @@ namespace Riku_fighter
 
             if (currentGameState == GameStates.paused)
             {
+                Person person = simulator.GetHumanity()[selectedPersonIndex];
+                List<Texture2D> spriteSheets = calculateCorrectSpriteSheet(person);
+                Sprite sprite;
+
+                sprite = new Sprite(spriteSheets.ElementAt(0), spriteSheets.ElementAt(1), new Vector2(857, 1672), 4, 1, 8, ScaleToHighDPI(1.7f), person);
+                sprite.x = screenWidth / 2 + 50;
+                sprite.y = screenHeight / 2 - 80;
+
+
                 checkSelectedIndex();
                 int initialY = 500;
                 var screenCenter = new Vector2(screenWidth / 2, screenHeight / 2);
                 var textureCenter = new Vector2(pauseBackGround.Width / 2, pauseBackGround.Height / 2);
                 spriteBatch.Draw(pauseBackGround, screenCenter, null, Color.White, 0f, textureCenter, 1f, SpriteEffects.None, 1f);
                 List<String> details = getPersonDetailString(simulator.GetHumanity()[selectedPersonIndex]);
+                Person p = simulator.GetHumanity()[selectedPersonIndex];
+                
                 foreach (var item in details)
                 {
                     String detail = item;
@@ -335,6 +346,7 @@ namespace Riku_fighter
                     initialY = initialY + 19;
 
                 }
+                sprite.Draw(spriteBatch);
             }
             spriteBatch.End(); // Stop drawing
             base.Draw(gameTime);
@@ -347,6 +359,7 @@ namespace Riku_fighter
             details.Add("Name: " + person.FirstName + " " + person.LastName);
             details.Add("Birthday: " + person.Birthdate.ToString() + " (age: " + person.Age + ") " + person.getCurrentState());
             details.Add("Gender: " + person.Gender.ToString());
+            details.Add("Race: " + person.Race.ToString());
             details.Add("Father: " + person.Father.FirstName + " " + person.Father.LastName);
             details.Add("Mother: " + person.Mother.FirstName + " " + person.Mother.LastName);
             if (person.Partner != null)
