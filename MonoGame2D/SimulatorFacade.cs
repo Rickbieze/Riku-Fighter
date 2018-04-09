@@ -154,15 +154,15 @@ namespace Riku_fighter
 
 
 
-            Mongoloid Adam = new Mongoloid("Adam", Matthew, Saskia, Gender.Genders.male, DateTime.Now);
-            Negroid Madison = new Negroid("Madison", Matthew, Saskia, Gender.Genders.female, DateTime.Now);
-            Caucasoid Jacob = new Caucasoid("Jacob", Marnix, Scarlett, Gender.Genders.male, DateTime.Now);
-            Australoid Eve = new Australoid("Eve", Marnix, Scarlett, Gender.Genders.female, DateTime.Now);
+            Person Adam = new Mongoloid("Adam", Matthew, Saskia, Gender.Genders.male, DateTime.Now);
+            Person Madison = new Negroid("Madison", Matthew, Saskia, Gender.Genders.female, DateTime.Now);
+            Person Jacob = new Caucasoid("Jacob", Marnix, Scarlett, Gender.Genders.male, DateTime.Now);
+            Person Eve = new Australoid("Eve", Marnix, Scarlett, Gender.Genders.female, DateTime.Now);
 
-            Australoid James = new Australoid("James", Gwyn, Priscilla, Gender.Genders.male, DateTime.Now);
-            Caucasoid Laura = new Caucasoid("Laura", John, Mable, Gender.Genders.female, DateTime.Now);
-            Negroid Gottard = new Negroid("Gottard", John, Mable, Gender.Genders.male, DateTime.Now);
-            Mongoloid Gwynevere = new Mongoloid("Gwynevere", Gwyn, Priscilla, Gender.Genders.female, DateTime.Now);
+            Person James = new Australoid("James", Gwyn, Priscilla, Gender.Genders.male, DateTime.Now);
+            Person Laura = new Caucasoid("Laura", John, Mable, Gender.Genders.female, DateTime.Now);
+            Person Gottard = new Negroid("Gottard", John, Mable, Gender.Genders.male, DateTime.Now);
+            Person Gwynevere = new Mongoloid("Gwynevere", Gwyn, Priscilla, Gender.Genders.female, DateTime.Now);
 
             Adam.State = new Healthy();
             Madison.State = new Healthy();
