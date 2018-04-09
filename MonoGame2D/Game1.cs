@@ -163,10 +163,6 @@ namespace Riku_fighter
                     person.Update(gameTime);
                 }
             }
-            if (currentGameState == GameStates.paused)
-            {
-                Debug.WriteLine("paused.");
-            }
 
             // Update animated SpriteClass objects based on their current rates of change
             base.Update(gameTime);
@@ -295,8 +291,7 @@ namespace Riku_fighter
                 var screenCenter = new Vector2(screenWidth / 2, screenHeight / 2);
                 var textureCenter = new Vector2(pauseBackGround.Width / 2, pauseBackGround.Height / 2);
                 spriteBatch.Draw(pauseBackGround, screenCenter, null, Color.White, 0f, textureCenter, 1f, SpriteEffects.None, 1f);
-                List<String> details = getPersonDetailString(players[selectedPersonIndex].person);
-                Debug.WriteLine(screenHeight / 2);
+                List<String> details = getPersonDetailString(simulator.GetHumanity()[selectedPersonIndex]);
                 foreach (var item in details)
                 {
                     String detail = item;
@@ -305,31 +300,27 @@ namespace Riku_fighter
                     initialY = initialY + 19;
 
                 }
-                
-
-
-                // spriteBatch.DrawString(stateFont, title, new Vector2(screenWidth / 2 - titleSize.X / 2, screenHeight / 3), Color.ForestGreen);
-
             }
-
             spriteBatch.End(); // Stop drawing
-
             base.Draw(gameTime);
         }
 
         private List<String> getPersonDetailString(Person person)
         {
-
             List<String> details = new List<string>();
 
             details.Add("Name: " + person.FirstName + " " + person.LastName);
-            details.Add("Birthday: " + person.Birthdate.ToString() + " (age: " + person.Age + ")");
+            details.Add("Birthday: " + person.Birthdate.ToString() + " (age: " + person.Age + ") " + person.getCurrentState());
             details.Add("Gender: " + person.Gender.ToString());
             details.Add("Father: " + person.Father.FirstName + " " + person.Father.LastName);
             details.Add("Mother: " + person.Mother.FirstName + " " + person.Mother.LastName);
+            if (person.Partner != null)
+            {
+                details.Add("Partner: " + person.Partner.FirstName + " " + person.Partner.LastName);
+            }
             if(person.Children.Count > 0)
             {
-                details.Add("Children: " + person.Children.ElementAt(0).FirstName + " " + person.Children.ElementAt(0).LastName);
+                details.Add("Children: ");
                 foreach (var child in person.Children)
                 {
                     details.Add(child.FirstName + " " + child.LastName);
@@ -374,7 +365,6 @@ namespace Riku_fighter
                 {
                     result.Add(femaleLeft);
                     result.Add(femaleRight);
-
                 }
                 else if (person.Race.GetType() == typeof(Race.Negroid))
                 {
@@ -451,7 +441,6 @@ namespace Riku_fighter
                 if (state.IsKeyDown(Keys.Tab) && !oldState.IsKeyDown(Keys.Tab))
                 {
                     currentGameState = GameStates.paused;
-
                 }
                 return;
             }
