@@ -144,6 +144,8 @@ namespace Riku_fighter
             John.Partner = Mable;
             Mable.Partner = John;
 
+
+
             Mongoloid Adam = new Mongoloid("Adam", Matthew, Saskia, Gender.Genders.male, DateTime.Now);
             Negroid Madison = new Negroid("Madison", Matthew, Saskia, Gender.Genders.female, DateTime.Now);
             Caucasoid Jacob = new Caucasoid("Jacob", Marnix, Scarlett, Gender.Genders.male, DateTime.Now);
@@ -163,6 +165,7 @@ namespace Riku_fighter
             //Person SpriteGottard = new Person(Gottard);
             //Person SpriteGwynevere = new Person(Gwynevere);
 
+
             Adam.State = new Healthy();
             Madison.State = new Healthy();
             Jacob.State = new Healthy();
@@ -172,14 +175,23 @@ namespace Riku_fighter
             Gottard.State = new Healthy();
             Gwynevere.State = new Healthy();
 
-            Humanity.Add(Adam);
-            Humanity.Add(Eve);
-            Humanity.Add(Jacob);
-            Humanity.Add(Madison);
-            Humanity.Add(James);
-            Humanity.Add(Laura);
-            Humanity.Add(Gottard);
-            Humanity.Add(Gwynevere);
+            Marnix.Children.Add(Jacob);
+            Marnix.Children.Add(Eve);
+            Scarlett.Children.Add(Jacob);
+            Scarlett.Children.Add(Eve);
+            Matthew.Children.Add(Adam);
+            Matthew.Children.Add(Madison);
+            Saskia.Children.Add(Adam);
+            Saskia.Children.Add(Madison);
+            Gwyn.Children.Add(James);
+            Gwyn.Children.Add(Gwynevere);
+            Priscilla.Children.Add(James);
+            Priscilla.Children.Add(Gwynevere);
+            John.Children.Add(Laura);
+            John.Children.Add(Gottard);
+            Mable.Children.Add(Laura);
+            Mable.Children.Add(Gottard);
+
             Humanity.Add(Marnix);
             Humanity.Add(Scarlett);
             Humanity.Add(Matthew);
@@ -188,15 +200,15 @@ namespace Riku_fighter
             Humanity.Add(Priscilla);
             Humanity.Add(Mable);
             Humanity.Add(John);
+            Humanity.Add(Adam);
+            Humanity.Add(Eve);
+            Humanity.Add(Jacob);
+            Humanity.Add(Madison);
+            Humanity.Add(James);
+            Humanity.Add(Laura);
+            Humanity.Add(Gottard);
+            Humanity.Add(Gwynevere);
 
-            AliveHumans.Add(Adam);
-            AliveHumans.Add(Eve);
-            AliveHumans.Add(Jacob);
-            AliveHumans.Add(Madison);
-            AliveHumans.Add(James);
-            AliveHumans.Add(Laura);
-            AliveHumans.Add(Gottard);
-            AliveHumans.Add(Gwynevere);
             AliveHumans.Add(Marnix);
             AliveHumans.Add(Scarlett);
             AliveHumans.Add(Matthew);
@@ -205,6 +217,15 @@ namespace Riku_fighter
             AliveHumans.Add(Priscilla);
             AliveHumans.Add(Mable);
             AliveHumans.Add(John);
+            AliveHumans.Add(Adam);
+            AliveHumans.Add(Eve);
+            AliveHumans.Add(Jacob);
+            AliveHumans.Add(Madison);
+            AliveHumans.Add(James);
+            AliveHumans.Add(Laura);
+            AliveHumans.Add(Gottard);
+            AliveHumans.Add(Gwynevere);
+
         }
              
         public List<Person> GetBabiesThisRound()
